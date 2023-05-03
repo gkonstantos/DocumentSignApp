@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 export const HomeLayout: React.FC = () => {
 	return (
 		<motion.div
-			className="h-full w-full flex flex-col justify-between overflow-x-hidden pt-24 z-50"
+			className="h-screen w-screen flex flex-col justify-between overflow-y-scroll overflow-x-hidden pt-24 z-50"
 			initial="exit"
 			animate="open"
 			exit="exit"

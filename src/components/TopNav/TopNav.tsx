@@ -9,8 +9,7 @@ export const TopNav: React.FunctionComponent = () => {
 		<motion.div 
 			className={clsx(
 				"w-full h-auto fixed top-0",
-				"bg-[#FAFBFF] dark:bg-zinc-900 dark:text-zinc-50",
-				"dark:border-t-zinc-800/70 dark:border-t-2"
+				"bg-[#FAFBFF] ",
 			)}
 		>
 			<motion.ul

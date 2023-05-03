@@ -28,12 +28,12 @@ export const NavItem: React.FunctionComponent<NavItemProps> = React.memo((props)
 				)}
 				onClick={() => !match && navigate(path)}
 			>
-				<div
+				{/* <div
 					className="w-full h-4/6 bg-center bg-no-repeat bg-[length:auto_1.5rem]"
 					style={{
 						backgroundImage: `url('${match ? iconSelected : icon}')`,
 					}}
-				/>
+				/> */}
 				{/* <p
 					title={label}
 					className={clsx(
