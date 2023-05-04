@@ -1,14 +1,14 @@
 import { Variant, motion } from "framer-motion";
 import toast from "react-hot-toast";
 
-type SignedFileProps = {
+type RecycledDocumentProps = {
 	initial?: Variant;
 	animate?: Variant;
 	exit?: Variant;
 	file: any;
 };
 
-export const SignedFile: React.FC<SignedFileProps> = (props) => {
+export const RecycledDocument: React.FC<RecycledDocumentProps> = (props) => {
 	const { initial, animate, exit, file } = props;
 	return (
 		<motion.div
@@ -21,24 +21,22 @@ export const SignedFile: React.FC<SignedFileProps> = (props) => {
 		>
 			<p>{file?.name}</p>
 			<div className="flex space-x-7 text-[#006699]">
-				<motion.button whileTap={{ scale: 0.9 }}>Open</motion.button>
 				<motion.button
 					whileTap={{ scale: 0.9 }}
-					onClick={() => toast.success("Link Copied")}
+                    onClick={() => toast.success("File Restored")}
 				>
-					Share
+					Restore
 				</motion.button>
 				<motion.button
 					whileTap={{ scale: 0.9 }}
-					onClick={() =>
-						toast.success("Document Moved to Recycle Bin")
-					}
+					onClick={() => toast.success("File Permanently Deleted")}
 				>
-					Recycle
+					Delete
 				</motion.button>
+				
 			</div>
 		</motion.div>
 	);
 };
 
-export default SignedFile;
+export default RecycledDocument;

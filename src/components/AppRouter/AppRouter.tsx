@@ -14,7 +14,7 @@ export const AppRouter:React.FC = () => {
         <Routes>
             <Route element={<HomeLayout/>}>
                 <Route path="/"   element={<HomePage />} />
-                <Route path="files"   element={<MyFilesPage />} />
+                <Route path="documents"   element={<MyFilesPage />} />
                 <Route path="upload"   element={<UploadPage />} />
                 <Route path="profile"   element={<MyProfilePage />} />
             </Route>

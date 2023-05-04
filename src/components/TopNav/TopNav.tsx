@@ -29,8 +29,8 @@ export const TopNav: React.FunctionComponent = () => {
 					// iconSelected={new URL(`/assets/Icon ionic-md-homeSelected.svg`, import.meta.url).href}
 				/>
 				<NavItem
-					path="files"
-					label="My Files"
+					path="documents"
+					label="My Documents"
 					// icon={new URL(`/assets/Icon feather-target.svg`, import.meta.url).href}
 					// iconSelected={new URL(`/assets/Icon feather-targetSelected.svg`, import.meta.url).href}
 				/>
