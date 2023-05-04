@@ -1,0 +1,19 @@
+<svg 
+  xmlns="http://www.w3.org/2000/svg" 
+  xmlns:xlink="http://www.w3.org/1999/xlink" 
+  width="37" 
+  height="45.062" 
+  viewBox="0 0 37 45.062"
+>
+  <defs>
+    <linearGradient id="linear-gradient" y1="1" x2="0.967" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#00172d"/>
+      <stop offset="0" stop-color="#003263"/>
+      <stop offset="1" stop-color="#0052a2"/>
+    </linearGradient>
+  </defs>
+  <g id="profile_consents" transform="translate(-51.5 -562.453)">
+    <path id="Icon_metro-security" data-name="Icon metro-security" d="M24.427,3.856l-18,8v12c0,11.11,7.67,21.47,18,24,10.33-2.53,18-12.89,18-24v-12Zm14,21.98c-1.06,8.24-6.55,15.58-14,17.87,0,0-13.99-4.436-14-17.85s0-11.4,0-11.4l14-6.22,14,6.22Z" transform="translate(45.573 559.145)" stroke="rgba(0,0,0,0)" stroke-width="1" fill="url(#linear-gradient)"/>
+    <path id="Icon_awesome-check" data-name="Icon awesome-check" d="M7.314,20.677l-7-7.157a1.119,1.119,0,0,1,0-1.557l1.523-1.557a1.06,1.06,0,0,1,1.523,0l4.715,4.822L18.174,4.9a1.06,1.06,0,0,1,1.523,0l1.523,1.557a1.119,1.119,0,0,1,0,1.557L8.837,20.677A1.06,1.06,0,0,1,7.314,20.677Z" transform="translate(59.599 572.647)" stroke="rgba(0,0,0,0)" stroke-width="1" fill="url(#linear-gradient)"/>
+  </g>
+</svg>

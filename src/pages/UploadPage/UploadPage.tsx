@@ -7,8 +7,7 @@ export const UploadPage: React.FC = () => {
 			<AnimatedTypography className="text-[#006699] font-semibold text-4xl py-3">
 				Upload Files
 			</AnimatedTypography>
-			<div className="bg-[#FAFBFF] w-9/12 h-5/6 rounded-2xl flex justify-center my-5">
-			
+			<div className="bg-[#FAFBFF] w-9/12 h-5/6 rounded-3xl flex justify-center my-5">
 				<FileUploader />
 			</div>
 		</div>

@@ -3,15 +3,17 @@ import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import clsx from "clsx";
 import { AnimatedTypography } from "../../../../components/AnimatedTypography";
+import toast from "react-hot-toast";
 
 export const FileUploader: React.FC = () => {
 	const onDrop = useCallback((acceptedFiles: File[]) => {
 		// Upload files here
 		console.log(acceptedFiles);
+		toast.success("File Uploaded!")
 	}, []);
 
 	const { getRootProps, getInputProps, isDragActive } = useDropzone({
-		onDrop,
+		onDrop
 	});
 
 	return (

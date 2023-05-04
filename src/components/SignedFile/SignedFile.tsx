@@ -1,4 +1,5 @@
 import { Variant, motion } from "framer-motion";
+import toast from "react-hot-toast";
 
 type SignedFileProps = {
 	initial?: Variant;
@@ -20,8 +21,18 @@ export const SignedFile: React.FC<SignedFileProps> = (props) => {
 		>
 			<p>{file?.name}</p>
 			<div className="flex space-x-7 text-[#006699]">
-				<motion.button whileTap={{ scale: 0.9 }}>Share</motion.button>
-				<motion.button whileTap={{ scale: 0.9 }}>Delete</motion.button>
+				<motion.button
+					whileTap={{ scale: 0.9 }}
+					onClick={() => toast.success("Link Copied")}
+				>
+					Share
+				</motion.button>
+				<motion.button
+					whileTap={{ scale: 0.9 }}
+					onClick={() => toast.success("Filed Moved to Recycle Bin")}
+				>
+					Delete
+				</motion.button>
 			</div>
 		</motion.div>
 	);

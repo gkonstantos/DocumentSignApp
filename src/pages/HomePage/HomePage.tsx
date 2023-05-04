@@ -1,8 +1,6 @@
 import { motion } from "framer-motion";
 import { AnimatedTypography } from "../../components/AnimatedTypography";
 import SignedFile from "../../components/SignedFile/SignedFile";
-import { useState } from "react";
-import Modal from "../../components/Modal";
 
 const MockFiles = [
 	{ name: "File Example 1", id: 1 },
