@@ -6,37 +6,43 @@ export const HomePage: React.FC = () => {
 	const navigate = useNavigate();
 
 	return (
-		<div className="h-full w-full flex flex-col items-center ">
-			<AnimatedTypography className="text-[#006699] font-semibold text-4xl py-3">
-				Hello, George
-			</AnimatedTypography>
-			<motion.img
-				initial={{
-					x: "-200%",
-					opacity: 0,
-				}}
-				animate={{
-					x: 0,
-					opacity: 1,
-				}}
-				transition={{
-					duration: 0.3,
-				}}
-				className="w-40 aspect-square"
-				src={
-					new URL(
-						`/assets/e-sign-low-resolution-color-logo.svg`,
-						import.meta.url
-					).href
-				}
-			/>
-			<p className="text-[#006699] text-lg w-1/2 font-semibold justify-center flex">
-				E-sign allows secure digital signing of documents with extreme
-				ease. <br />
-				View, sign, download and send documents, now all in one place!
-			</p>
-			<div className="w-full h-full flex flex-col items-center justify-evenly py-5">
-				<div className="flex flex-col items-center w-1/2 space-y-5 py-">
+		<div className="h-full w-full">
+			<div className="w-full flex flex-col items-center justify-evenly py-5">
+				<AnimatedTypography className="text-[#006699] font-semibold text-4xl">
+					Hello, George
+				</AnimatedTypography>
+				<motion.img
+					initial={{
+						x: "-200%",
+						opacity: 0,
+					}}
+					animate={{
+						x: 0,
+						opacity: 1,
+					}}
+					transition={{
+						duration: 0.3,
+					}}
+					className="w-40 aspect-square"
+					src={
+						new URL(
+							`/assets/e-sign-low-resolution-color-logo.svg`,
+							import.meta.url
+						).href
+					}
+				/>
+				<p className="text-[#006699] text-lg font-semibold">
+					E-sign allows secure digital signing of documents with
+					extreme ease. <br />
+					View, sign, download and send documents, now all in one
+					place!
+				</p>
+
+				<div className="flex flex-col items-center  space-y-5 ">
+					<p className="text-[#006699]  font-semibold justify-center flex">
+						<br /> View, open and share your documents, organised
+						like never before.
+					</p>
 					<motion.img
 						initial={{
 							x: "-200%",
@@ -65,13 +71,12 @@ export const HomePage: React.FC = () => {
 					>
 						View your Documents
 					</motion.button>
-					<p className="text-[#006699]  font-semibold justify-center flex">
-						<br /> View, open and share your documents, organised
-						like never before.
-					</p>
 				</div>
 
-				<div className="flex flex-col items-center w-1/2 space-y-5 py-2">
+				<div className="flex flex-col items-center space-y-5 py-5">
+					<p className="text-[#006699]  font-semibold justify-center flex">
+						Upload files for signing easily and with no delays.
+					</p>
 					<motion.img
 						initial={{
 							x: "-200%",
@@ -100,12 +105,13 @@ export const HomePage: React.FC = () => {
 					>
 						Upload Files
 					</motion.button>
-					<p className="text-[#006699]  font-semibold justify-center flex">
-						Upload files for signing easily and with no delays.
-					</p>
 				</div>
 
-				<div className="flex flex-col items-center w-1/2 space-y-5 py-2">
+				<div className="flex flex-col items-center space-y-5 py-5">
+					<p className="text-[#006699]  font-semibold justify-center flex">
+						View and change your personal details and the app's look
+						and feel.
+					</p>
 					<motion.img
 						initial={{
 							x: "-200%",
@@ -134,10 +140,6 @@ export const HomePage: React.FC = () => {
 					>
 						My Profile
 					</motion.button>
-					<p className="text-[#006699]  font-semibold justify-center flex">
-						View and change your personal details and the app's look
-						and feel.
-					</p>
 				</div>
 			</div>
 		</div>
