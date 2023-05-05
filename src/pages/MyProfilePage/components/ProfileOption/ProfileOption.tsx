@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { motion, Variant } from "framer-motion";
 import clsx from "clsx";
 
@@ -51,7 +51,7 @@ export const ProfileOption: React.FunctionComponent<ProfileOptionProps> = (
 				{icon && <img src={icon} width="21" />}
 				<p className="text-lg">{text}</p>
 			</div>
-			{onClick && (
+			{onClick && open !== undefined && (
 				<motion.img
 				animate={ open ? "open": "closed"}
 					variants={{

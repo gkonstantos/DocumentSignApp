@@ -35,21 +35,25 @@ export const Username: React.FC<UserNameProps> = (props) => {
 				placeholder="New Username*"
 				className="placeholder:text-center placeholder:text-sm placeholder:italic border-2 border-[#006699]"
 				value={username}
+				required
 				onChange={(e) => setUsername(e.target.value)}
 			></input>
 			<input
 				type="password"
+				required
 				placeholder="Your Password*"
 				className="placeholder:text-center placeholder:text-sm placeholder:italic border-2 border-[#006699]"
 				value={password}
 				onChange={(e) => setPassword(e.target.value)}
 			></input>
-			<button
+			<motion.button
+				whileTap={{ scale: 0.9 }}
+				disabled={!username || !password}
 				className="bg-[#006699] rounded-3xl w-32 h-9 text-white"
 				onClick={handleClick}
 			>
 				Save
-			</button>
+			</motion.button>
 		</motion.div>
 	);
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { HomePage, LoginPage } from "../../pages";
 import { MyFilesPage } from "../../pages/MyFilesPage";
 import { UploadPage } from "../../pages/UploadPage";
@@ -12,8 +12,9 @@ export const AppRouter:React.FC = () => {
 
     return(
         <Routes>
+            <Route path="/" element={<LoginPage/>}/>
             <Route element={<HomeLayout/>}>
-                <Route path="/"   element={<HomePage />} />
+                <Route path="home"   element={<HomePage />} />
                 <Route path="documents"   element={<MyFilesPage />} />
                 <Route path="upload"   element={<UploadPage />} />
                 <Route path="profile"   element={<MyProfilePage />} />

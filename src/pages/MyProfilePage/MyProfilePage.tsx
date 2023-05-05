@@ -4,8 +4,12 @@ import ProfileOption from "./components/ProfileOption";
 import { useState } from "react";
 import Username from "./components/Username";
 import { Password } from "./components/Password";
+import { useNavigate } from "react-router-dom";
 
 export const MyProfilePage: React.FC = () => {
+
+	const navigate = useNavigate();
+
 	const [usernameVisible, setUsernameVisible] = useState<boolean>(false);
 	const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
 	const [usernameOpen, setUsernameOpen] = useState<boolean>(false);
@@ -129,6 +133,7 @@ export const MyProfilePage: React.FC = () => {
 							ease: "easeOut",
 						},
 					}}
+					onClick={() => navigate("/")}
 				/>
 			</motion.div>
 		</div>

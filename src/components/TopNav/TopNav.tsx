@@ -23,7 +23,7 @@ export const TopNav: React.FunctionComponent = () => {
 				}}
 			>
 				<NavItem
-					path="/"
+					path="home"
 					label="Home"
 					// icon={new URL(`/assets/Icon ionic-md-home.svg`, import.meta.url).href}
 					// iconSelected={new URL(`/assets/Icon ionic-md-homeSelected.svg`, import.meta.url).href}

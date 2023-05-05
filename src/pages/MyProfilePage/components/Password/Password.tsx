@@ -40,6 +40,7 @@ export const Password: React.FC<PasswordProps> = (props) => {
 			}}
 		>
 			<input
+				required
 				type="password"
 				placeholder="Current Password*"
 				className="placeholder:text-center placeholder:text-sm placeholder:italic border-2 border-[#006699]"
@@ -47,6 +48,7 @@ export const Password: React.FC<PasswordProps> = (props) => {
 				onChange={(e) => setCurrentPassword(e.target.value)}
 			></input>
 			<input
+				required
 				type="password"
 				placeholder="New Password*"
 				className={clsx(
@@ -56,6 +58,7 @@ export const Password: React.FC<PasswordProps> = (props) => {
 				onChange={(e) => setNewPassword(e.target.value)}
 			></input>
 			<input
+				required
 				type="password"
 				placeholder="Repeat new Password*"
 				className={clsx(
@@ -64,12 +67,14 @@ export const Password: React.FC<PasswordProps> = (props) => {
 				value={repeatPassword}
 				onChange={(e) => setRepeatPassword(e.target.value)}
 			></input>
-			<button
+			<motion.button
+				whileTap={{ scale: 0.9 }}
 				className="bg-[#006699] rounded-3xl w-32 h-9 text-white"
 				onClick={handleClick}
+				disabled={!currentPassword || !repeatPassword || !newPassword}
 			>
 				Save
-			</button>
+			</motion.button>
 		</motion.div>
 	);
 };
