@@ -9,8 +9,7 @@ export const TopNav: React.FunctionComponent = () => {
 		<motion.div 
 			className={clsx(
 				"w-full h-auto fixed top-0",
-				"bg-[#FAFBFF] dark:bg-zinc-900 dark:text-zinc-50",
-				"dark:border-t-zinc-800/70 dark:border-t-2"
+				"bg-[#FAFBFF] ",
 			)}
 		>
 			<motion.ul
@@ -24,14 +23,14 @@ export const TopNav: React.FunctionComponent = () => {
 				}}
 			>
 				<NavItem
-					path="/"
+					path="home"
 					label="Home"
 					// icon={new URL(`/assets/Icon ionic-md-home.svg`, import.meta.url).href}
 					// iconSelected={new URL(`/assets/Icon ionic-md-homeSelected.svg`, import.meta.url).href}
 				/>
 				<NavItem
-					path="files"
-					label="My Files"
+					path="documents"
+					label="My Documents"
 					// icon={new URL(`/assets/Icon feather-target.svg`, import.meta.url).href}
 					// iconSelected={new URL(`/assets/Icon feather-targetSelected.svg`, import.meta.url).href}
 				/>
