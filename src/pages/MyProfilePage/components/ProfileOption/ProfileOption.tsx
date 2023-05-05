@@ -49,7 +49,7 @@ export const ProfileOption: React.FunctionComponent<ProfileOptionProps> = (
 		>
 			<div className="font-semibold flex-1 flex space-x-4">
 				{icon && <img src={icon} width="21" />}
-				<p className="text-lg">{text}</p>
+				<p className="text-lg text-[#006699]">{text}</p>
 			</div>
 			{onClick && open !== undefined && (
 				<motion.img
