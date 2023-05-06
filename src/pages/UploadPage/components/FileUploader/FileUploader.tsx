@@ -25,9 +25,9 @@ export const FileUploader: React.FC = () => {
 			)}
 		>
 			<input {...getInputProps()} />
-			<AnimatedTypography className="text-[#006699] font-semibold text-3xl flex-wrap px-3">
+			<p className="text-[#006699] font-semibold text-3xl flex-wrap px-3">
 				Drag and drop files here or click to select files
-			</AnimatedTypography>
+			</p>
 		</div>
 	);
 };

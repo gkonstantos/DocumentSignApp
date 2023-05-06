@@ -33,15 +33,15 @@ export const MyFilesPage: React.FC = () => {
 			<AnimatedTypography className="text-[#006699] font-semibold text-4xl py-3">
 				All your Documents, in one place!
 			</AnimatedTypography>
-			<AnimatedTypography className="text-[#006699] w-full font-semibold justify-center flex">
+			<p className="text-[#006699] w-full font-semibold justify-center flex">
 				Here is your Overview...
-			</AnimatedTypography>
+			</p>
 			<AnimatedTypography className="text-[#006699] font-semibold text-3xl pt-10 pb-3">
 				All Documents
 			</AnimatedTypography>
-			<AnimatedTypography className="text-[#006699] w-full font-semibold justify-center flex">
+			<p className="text-[#006699] w-full font-semibold justify-center flex">
 				Cilck Open to View and Sign Documents.
-			</AnimatedTypography>
+			</p>
 			<motion.div
 				className="space-y-3 w-1/2 flex flex-col items-center "
 				initial="initial"
