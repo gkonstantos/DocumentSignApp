@@ -14,6 +14,7 @@
     "clsx": "^1.2.1",
     "framer-motion": "^10.12.3",
     "lodash": "^4.17.21",
+    "pg": "^8.10.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
@@ -33,5 +34,18 @@
     "tailwindcss": "^3.3.1",
     "typescript": "^4.9.3",
     "vite": "^4.2.0"
-  }
+  },
+  "main": "databasepg.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gkonstantos/DocumentSignApp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gkonstantos/DocumentSignApp/issues"
+  },
+  "homepage": "https://github.com/gkonstantos/DocumentSignApp#readme",
+  "description": ""
 }

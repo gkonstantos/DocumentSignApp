@@ -10,6 +10,7 @@ export const LoginPage: React.FunctionComponent = () => {
 
 	const navigate = useNavigate();
 
+
 	return (
 		<motion.div
 			className={clsx("relative flex flex-col items-center gap-y-2")}
@@ -44,6 +45,7 @@ export const LoginPage: React.FunctionComponent = () => {
 			/>
 			<input
 				required
+				type="password"
 				className="placeholder:text-center placeholder:text-sm placeholder:italic border-2 border-[#006699]"
 				placeholder="Password"
 				value={password}
