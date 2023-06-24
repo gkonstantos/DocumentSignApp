@@ -5,19 +5,21 @@ import { MyFilesPage } from "../../pages/MyFilesPage";
 import { UploadPage } from "../../pages/UploadPage";
 import { MyProfilePage } from "../../pages/MyProfilePage";
 import { HomeLayout } from "../../pages/HomeLayout";
+import { RegisterPage } from "../../pages/RegisterPage";
 
 
 
-export const AppRouter:React.FC = () => {
+export const AppRouter: React.FC = () => {
 
-    return(
+    return (
         <Routes>
-            <Route path="/" element={<LoginPage/>}/>
-            <Route element={<HomeLayout/>}>
-                <Route path="home"   element={<HomePage />} />
-                <Route path="documents"   element={<MyFilesPage />} />
-                <Route path="upload"   element={<UploadPage />} />
-                <Route path="profile"   element={<MyProfilePage />} />
+            <Route path="/" element={<LoginPage />} />
+            <Route path="register" element={<RegisterPage />} />
+            <Route element={<HomeLayout />}>
+                <Route path="home" element={<HomePage />} />
+                <Route path="documents" element={<MyFilesPage />} />
+                <Route path="upload" element={<UploadPage />} />
+                <Route path="profile" element={<MyProfilePage />} />
             </Route>
         </Routes>
     )

@@ -33,7 +33,7 @@ export const LoginPage: React.FunctionComponent = () => {
 					).href
 				}
 			/>
-			<AnimatedTypography className="text-[#006699] font-semibold text-4xl">
+			<AnimatedTypography className="pb-2 text-[#006699] font-semibold text-4xl">
 				Welcome
 			</AnimatedTypography>
 			<input
@@ -60,6 +60,14 @@ export const LoginPage: React.FunctionComponent = () => {
 				disabled={!username || !password}
 			>
 				Login
+			</motion.button>
+			
+			<motion.button
+				whileTap={{ scale: 0.9 }}
+				className="text-[#006699]"
+				onClick={() => navigate("register")}
+			>
+				Click here to Register!
 			</motion.button>
 		</motion.div>
 	);
