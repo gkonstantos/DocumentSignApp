@@ -10,6 +10,7 @@ type AllDocumentProps = {
 
 export const AllDocument: React.FC<AllDocumentProps> = (props) => {
 	const { initial, animate, exit, file } = props;
+
 	return (
 		<motion.div
 			className="w-full px-5 space-x-5 flex items-center justify-between h-10 rounded-3xl bg-[#FAFBFF]"
@@ -19,7 +20,7 @@ export const AllDocument: React.FC<AllDocumentProps> = (props) => {
 				exit: exit ?? {},
 			}}
 		>
-			<p>{file?.name}</p>
+			<p className="">{file && file.filename}</p>
 			<div className="flex space-x-7 text-[#006699]">
 				<motion.button
 					whileTap={{ scale: 0.9 }}

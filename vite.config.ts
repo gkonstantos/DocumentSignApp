@@ -7,8 +7,12 @@ export default defineConfig({
   base:"/",
   plugins: [react(), svgr(),],
   server: {
-    open:true
+    open:true,
+    port: 3000,
   },
+  preview: {
+    port: 3000,
+},
 //   define: {
 //     'process.env': {}
 // },

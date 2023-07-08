@@ -5,9 +5,11 @@ import { useState } from "react";
 import Username from "./components/Username";
 import { Password } from "./components/Password";
 import { useNavigate } from "react-router-dom";
+import useUser from "../../hooks/useUser";
 
 export const MyProfilePage: React.FC = () => {
 
+	const { username } = useUser();
 	const navigate = useNavigate();
 
 	const [usernameVisible, setUsernameVisible] = useState<boolean>(false);
@@ -16,9 +18,9 @@ export const MyProfilePage: React.FC = () => {
 	const [passwordOpen, setPasswordOpen] = useState<boolean>(false);
 	return (
 		<div className="h-full w-full flex flex-col  items-center space-y-5">
-			<AnimatedTypography className="text-[#006699] font-semibold text-4xl py-3">
-				George
-			</AnimatedTypography>
+			<p className="text-[#006699] font-semibold text-4xl py-3 text-center">
+				{username}
+			</p>
 
 			<motion.div
 				className="flex flex-col gap-y-3 w-1/2"
@@ -133,7 +135,7 @@ export const MyProfilePage: React.FC = () => {
 							ease: "easeOut",
 						},
 					}}
-					onClick={() => navigate("/")}
+					onClick={() =>{ navigate("/"); localStorage.clear();}}
 				/>
 			</motion.div>
 		</div>

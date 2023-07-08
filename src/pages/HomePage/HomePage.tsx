@@ -1,16 +1,19 @@
 import { motion } from "framer-motion";
 import { AnimatedTypography } from "../../components/AnimatedTypography";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../../hooks/useUser";
 
 export const HomePage: React.FC = () => {
 	const navigate = useNavigate();
 
+	const { username } = useUser();
+
 	return (
 		<div className="h-full w-full">
 			<div className="w-full flex flex-col items-center justify-evenly py-5">
-				<AnimatedTypography className="text-[#006699] font-semibold text-4xl">
-					Hello, George
-				</AnimatedTypography>
+				<p className="text-[#006699] font-semibold text-4xl">
+					Hello, {username}
+				</p>
 				<motion.img
 					initial={{
 						x: "-200%",

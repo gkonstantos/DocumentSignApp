@@ -1,17 +1,47 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
-import axios from "axios";
 import clsx from "clsx";
-import { AnimatedTypography } from "../../../../components/AnimatedTypography";
 import toast from "react-hot-toast";
+import { useUploadFile } from "../../../../hooks/useUploadFile";
+import useUser from "../../../../hooks/useUser";
+import axios from "axios";
 
 export const FileUploader: React.FC = () => {
-	const onDrop = useCallback((acceptedFiles: File[]) => {
-		// Upload files here
-		console.log(acceptedFiles);
-		toast.success("File Uploaded!")
+
+	const { username } = useUser();
+
+	const {result, file} = useUploadFile();
+
+	const onDrop = useCallback(async(acceptedFiles:Array<File>) => {
+
+		try {
+			const file = acceptedFiles[0];
+			const { name } = file;
+	
+			await axios.post('http://localhost:5173/upload', {
+			  file,
+			  name,
+			});
+		
+			console.log('File uploaded successfully');
+		  } catch (error) {
+			console.error('Error uploading file:', error);
+		  }
+		// try {
+		// 	const files = acceptedFiles[0];
+		// 	const { name, type, size } = files;
+		// 	 await file(name, type, size, username);
+		// } catch (error) {
+		// 	console.error(error);
+		// }
+		console.log(acceptedFiles[0]);
 	}, []);
 
+	useEffect(() => {
+		if (result.success) {
+			toast.success("File Uploaded!")
+		}else if(result.error) toast.error("Something went wrong...")
+	}, [result.success]);	
 	const { getRootProps, getInputProps, isDragActive } = useDropzone({
 		onDrop
 	});
