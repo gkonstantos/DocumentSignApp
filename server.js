@@ -163,48 +163,66 @@ const login = app.post("/login", async (req, resp) => {
 
   // The new ID for your GCS file
 // const destFileName = 'rwservlet.pdf';
-// const bucketName = 'e-sign-bucket'
+const bucketName = 'e-sign-bucket'
 
-// const storage = new Storage();
+const storage = new Storage();
 // const uploadFileToGCS = async (file, destination) => {
 //   // console.log(file)
 //   const options = {
 //     destination,
 //   };
-//   // try{
-//   //   await storage.bucket(bucketName).upload(file.name, options);
-//   //   console.log(`${filePath} uploaded to ${bucketName}`);
-//   // }catch (error) {
-//   //   console.error('Error uploading file to GCS:', error);
-//   // }
+//   try{
+//     await storage.bucket(bucketName).upload(file.name, options);
+//     console.log(`${filePath} uploaded to ${bucketName}`);
+//   }catch (error) {
+//     console.error('Error uploading file to GCS:', error);
+//   }
 
   
 // }
 
-// // uploadFileToGCS().catch(console.error);
+// uploadFileToGCS().catch(console.error);
 
 
-// const upload = app.post('/upload', (req, res) => {
-//   // Assuming the file upload form has a field named "file"
-//   // const uploadedFile = req.files.file;
-//   const file = req.body;
-//   const {name} =  req.body;
+const upload = app.post('/upload', async (req, res) => {
+  // Assuming the file upload form has a field named "file"
+  // const uploadedFile = req.files.file;
+  const file = req.body;
+  const {name} =  req.body;
 
-//   console.log(file)
-//   // Set the destination file name
-//   // const destFileName = 'file1.txt';
+  console.log(file)
 
-//   // Call the uploadFileToGCS function with the uploaded file and destination file name
-//   uploadFileToGCS(file, name)
-//     .then(() => {
-//       // File uploaded successfully
-//       res.status(200).send('File uploaded to GCS');
-//     })
-//     .catch((error) => {
-//       // Handle any errors that occurred during file upload
-//       console.error('Error uploading file to GCS:', error);
-//       res.status(500).send('Error uploading file to GCS');
-//     });
-// });
+  try{
+    // await storage.bucket(bucketName).upload("image00001.jpeg", name);
+    await storage.bucket(bucketName).upload("./image00001.jpeg", {
+      destination: "/image00001.jpeg",
+      // Support for HTTP requests made with `Accept-Encoding: gzip`
+      gzip: true,
+      metadata: {
+          // Enable long-lived HTTP caching headers
+          // Use only if the contents of the file will never change
+          // (If the contents will change, use cacheControl: 'no-cache')
+          cacheControl: 'public, max-age=31536000',
+      },
+    });
+    console.log(`${filePath} uploaded to ${bucketName}`);
+  }catch (error) {
+    console.error('Error uploading file to GCS:', error);
+  }
+  // Set the destination file name
+  // const destFileName = 'file1.txt';
+
+  // Call the uploadFileToGCS function with the uploaded file and destination file name
+  // uploadFileToGCS(file, name)
+  //   .then(() => {
+  //     // File uploaded successfully
+  //     res.status(200).send('File uploaded to GCS');
+  //   })
+  //   .catch((error) => {
+  //     // Handle any errors that occurred during file upload
+  //     console.error('Error uploading file to GCS:', error);
+  //     res.status(500).send('Error uploading file to GCS');
+  //   });
+});
 
   
