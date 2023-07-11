@@ -12,13 +12,14 @@ export const useUploadFile = () => {
         success: null,
         error: null,
     });
-    const file = async (name: string, type:string,size: number, username:string) => {
+    const file = async (name: string, type:string,size: number, username:string, publicUrl: string) => {
         try {
           await axios.post('http://localhost:5173/uploadFiles', {
             name,
             type, 
             size,
             username,
+            publicUrl,
           });
     
           setResult({ success: true, error: null });

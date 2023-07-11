@@ -23,6 +23,7 @@ export const AllDocument: React.FC<AllDocumentProps> = (props) => {
 			<p className="">{file && file.filename}</p>
 			<div className="flex space-x-7 text-[#006699]">
 				<motion.button
+				onClick={()=> window.open(file.path)}
 					whileTap={{ scale: 0.9 }}
 				>
 					Open
@@ -31,7 +32,7 @@ export const AllDocument: React.FC<AllDocumentProps> = (props) => {
 					whileTap={{ scale: 0.9 }}
 					onClick={() => toast.success("Document Moved to Recycle Bin")}
 				>
-					Recycle
+					Delete
 				</motion.button>
 			</div>
 		</motion.div>

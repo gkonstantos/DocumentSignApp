@@ -135,7 +135,7 @@ export const MyFilesPage: React.FC = () => {
 					/>
 				))}
 			</motion.div>
-			<AnimatedTypography className="text-[#006699] font-semibold text-3xl pt-10 pb-3">
+			{/* <AnimatedTypography className="text-[#006699] font-semibold text-3xl pt-10 pb-3">
 				Recycled Documents
 			</AnimatedTypography>
 			<p className="text-[#006699] w-full font-semibold justify-center flex pb-2">
@@ -167,7 +167,7 @@ export const MyFilesPage: React.FC = () => {
 						file={file}
 					/>
 				))}
-			</motion.div>
+			</motion.div> */}
 		</div>
 	);
 };

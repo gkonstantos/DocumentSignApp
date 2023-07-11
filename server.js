@@ -6,6 +6,8 @@ import bcrypt from  "bcrypt";
 import File from "./models/files.js";
 
 import {Storage} from '@google-cloud/storage';
+import multer from 'multer';
+// const multer = require('multer');
 
 const app = express();
 
@@ -108,7 +110,7 @@ const login = app.post("/login", async (req, resp) => {
   });
 
   const uploadFiles = app.post("/uploadFiles", async (req, resp) => {
-    const { name, type, size, username } = req.body;
+    const { name, type, size, username,publicUrl } = req.body;
     try{
       
       const existingFile = await File.findOne({ filename: name, owner: username });
@@ -122,7 +124,7 @@ const login = app.post("/login", async (req, resp) => {
         contentType: type,
         size: size,
         owner: username,
-        path:"pathToCloud"
+        path: publicUrl
       });
       let result = await file.save();
       result = result.toObject();
@@ -154,75 +156,34 @@ const login = app.post("/login", async (req, resp) => {
   });
 
 
-
-
-
-
- // The path to your file to upload
-// const filePath = 'C:/Users/George/Documents/γενικα/rwservlet.pdf';
-
-  // The new ID for your GCS file
-// const destFileName = 'rwservlet.pdf';
 const bucketName = 'e-sign-bucket'
-
 const storage = new Storage();
-// const uploadFileToGCS = async (file, destination) => {
-//   // console.log(file)
-//   const options = {
-//     destination,
-//   };
-//   try{
-//     await storage.bucket(bucketName).upload(file.name, options);
-//     console.log(`${filePath} uploaded to ${bucketName}`);
-//   }catch (error) {
-//     console.error('Error uploading file to GCS:', error);
-//   }
+const uploadf = multer();
 
-  
-// }
+const upload = app.post('/upload', uploadf.single('file'), async (req, res) => {
 
-// uploadFileToGCS().catch(console.error);
+  const uploadedFile = req.file;
 
+  console.log(uploadedFile.originalname);
+  console.log(uploadedFile.buffer);
 
-const upload = app.post('/upload', async (req, res) => {
-  // Assuming the file upload form has a field named "file"
-  // const uploadedFile = req.files.file;
-  const file = req.body;
-  const {name} =  req.body;
-
-  console.log(file)
-
-  try{
-    // await storage.bucket(bucketName).upload("image00001.jpeg", name);
-    await storage.bucket(bucketName).upload("./image00001.jpeg", {
-      destination: "/image00001.jpeg",
-      // Support for HTTP requests made with `Accept-Encoding: gzip`
+  try {
+    await storage.bucket(bucketName).file(uploadedFile.originalname).save(uploadedFile.buffer, {
+      contentType: uploadedFile.mimetype,
       gzip: true,
       metadata: {
-          // Enable long-lived HTTP caching headers
-          // Use only if the contents of the file will never change
-          // (If the contents will change, use cacheControl: 'no-cache')
-          cacheControl: 'public, max-age=31536000',
+        cacheControl: 'public, max-age=31536000',
       },
     });
-    console.log(`${filePath} uploaded to ${bucketName}`);
+    console.log(`${uploadedFile.originalname} uploaded to ${bucketName}`);
+
+    const publicUrl = `https://storage.googleapis.com/${bucketName}/${uploadedFile.originalname}`;
+    console.log(publicUrl);
+    res.status(200).send(publicUrl);
   }catch (error) {
     console.error('Error uploading file to GCS:', error);
+    res.status(500).json({ message: 'Server error' });
   }
-  // Set the destination file name
-  // const destFileName = 'file1.txt';
-
-  // Call the uploadFileToGCS function with the uploaded file and destination file name
-  // uploadFileToGCS(file, name)
-  //   .then(() => {
-  //     // File uploaded successfully
-  //     res.status(200).send('File uploaded to GCS');
-  //   })
-  //   .catch((error) => {
-  //     // Handle any errors that occurred during file upload
-  //     console.error('Error uploading file to GCS:', error);
-  //     res.status(500).send('Error uploading file to GCS');
-  //   });
 });
 
   
