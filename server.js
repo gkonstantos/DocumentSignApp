@@ -6,10 +6,9 @@ import bcrypt from  "bcrypt";
 import File from "./models/files.js";
 
 import {Storage} from '@google-cloud/storage';
+import multer from 'multer';
 
 const app = express();
-
-// const storage = new Storage();
 
 // connect to mongodb.
 const dbURI =
@@ -34,7 +33,6 @@ app.use(express.json());
 app.use(cors());
 app.get("/", (req, resp) => {
     console.log("GET request received at /");
-    // console.log(req.body);
     resp.send("App is Working");
     
 });
@@ -66,7 +64,6 @@ const register = app.post("/register", async (req, resp) => {
           console.log(result);
       } else {
           console.log("User already registered");
-          // resp.status(409).send("User already registered");
       }
 
   } catch (e) {
@@ -108,7 +105,7 @@ const login = app.post("/login", async (req, resp) => {
   });
 
   const uploadFiles = app.post("/uploadFiles", async (req, resp) => {
-    const { name, type, size, username } = req.body;
+    const { name, type, size, username,publicUrl } = req.body;
     try{
       
       const existingFile = await File.findOne({ filename: name, owner: username });
@@ -122,7 +119,7 @@ const login = app.post("/login", async (req, resp) => {
         contentType: type,
         size: size,
         owner: username,
-        path:"pathToCloud"
+        path: publicUrl
       });
       let result = await file.save();
       result = result.toObject();
@@ -135,7 +132,6 @@ const login = app.post("/login", async (req, resp) => {
     }
     catch (e){
       console.log(e)
-      // resp.send("Something Went Wrong");
       resp.status(500).send("Something went wrong during upload");
     }
   })
@@ -154,75 +150,64 @@ const login = app.post("/login", async (req, resp) => {
   });
 
 
+  const deleteFiles = app.post('/delete', async (req, resp) => {
+    const {fileid, filename} = req.body;
+    try {
+      // Retrieve all files for the user
+      const files = await File.deleteOne({ _id: fileid }).exec();
+   
+      await deleteFileFromGCS(filename);
+      resp.json(files);
+    } catch (error) {
+      console.error(error);
+      resp.status(500).json({ message: 'Server error' });
+    }
+  });
 
 
-
-
- // The path to your file to upload
-// const filePath = 'C:/Users/George/Documents/γενικα/rwservlet.pdf';
-
-  // The new ID for your GCS file
-// const destFileName = 'rwservlet.pdf';
+// CREATE A DIFFERENT BUCKET FOR EACH USER??
+// OR DIFFERENT FOLDERS INSIDE EACH BUCKET??
 const bucketName = 'e-sign-bucket'
-
 const storage = new Storage();
-// const uploadFileToGCS = async (file, destination) => {
-//   // console.log(file)
-//   const options = {
-//     destination,
-//   };
-//   try{
-//     await storage.bucket(bucketName).upload(file.name, options);
-//     console.log(`${filePath} uploaded to ${bucketName}`);
-//   }catch (error) {
-//     console.error('Error uploading file to GCS:', error);
-//   }
+const uploadf = multer();
 
-  
-// }
+const upload = app.post('/upload', uploadf.single('file'), async (req, res) => {
 
-// uploadFileToGCS().catch(console.error);
+  const uploadedFile = req.file;
+  const username = req.body.username;
 
+  console.log(uploadedFile.originalname);
+  console.log(username)
+  console.log(uploadedFile.buffer);
 
-const upload = app.post('/upload', async (req, res) => {
-  // Assuming the file upload form has a field named "file"
-  // const uploadedFile = req.files.file;
-  const file = req.body;
-  const {name} =  req.body;
-
-  console.log(file)
-
-  try{
-    // await storage.bucket(bucketName).upload("image00001.jpeg", name);
-    await storage.bucket(bucketName).upload("./image00001.jpeg", {
-      destination: "/image00001.jpeg",
-      // Support for HTTP requests made with `Accept-Encoding: gzip`
+  try {
+    await storage.bucket(bucketName).file(`${uploadedFile.originalname}_${username}`).save(uploadedFile.buffer, {
+      contentType: uploadedFile.mimetype,
       gzip: true,
       metadata: {
-          // Enable long-lived HTTP caching headers
-          // Use only if the contents of the file will never change
-          // (If the contents will change, use cacheControl: 'no-cache')
-          cacheControl: 'public, max-age=31536000',
+        cacheControl: 'public, max-age=31536000',
       },
     });
-    console.log(`${filePath} uploaded to ${bucketName}`);
+    console.log(`${uploadedFile.originalname} uploaded to ${bucketName}`);
+
+    const publicUrl = `https://storage.googleapis.com/${bucketName}/${uploadedFile.originalname}_${username}`;
+    console.log(publicUrl);
+    res.status(200).send(publicUrl);
   }catch (error) {
     console.error('Error uploading file to GCS:', error);
+    res.status(500).json({ message: 'Server error' });
   }
-  // Set the destination file name
-  // const destFileName = 'file1.txt';
-
-  // Call the uploadFileToGCS function with the uploaded file and destination file name
-  // uploadFileToGCS(file, name)
-  //   .then(() => {
-  //     // File uploaded successfully
-  //     res.status(200).send('File uploaded to GCS');
-  //   })
-  //   .catch((error) => {
-  //     // Handle any errors that occurred during file upload
-  //     console.error('Error uploading file to GCS:', error);
-  //     res.status(500).send('Error uploading file to GCS');
-  //   });
 });
 
-  
+
+
+
+const deleteFileFromGCS = async (filename) => {
+  try {
+    await storage.bucket(bucketName).file(filename).delete();
+    console.log(`File ${filename} deleted from GCS.`);
+  } catch (error) {
+    console.error('Error deleting file from GCS:', error);
+  }
+};
+

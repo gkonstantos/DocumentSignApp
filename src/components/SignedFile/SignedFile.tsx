@@ -24,17 +24,17 @@ export const SignedFile: React.FC<SignedFileProps> = (props) => {
 				<motion.button whileTap={{ scale: 0.9 }}>Open</motion.button>
 				<motion.button
 					whileTap={{ scale: 0.9 }}
-					onClick={() => toast.success("Link Copied")}
+					// onClick={() => toast.success("Link Copied")}
 				>
 					Share
 				</motion.button>
 				<motion.button
 					whileTap={{ scale: 0.9 }}
-					onClick={() =>
-						toast.success("Document Moved to Recycle Bin")
-					}
+					// onClick={() =>
+					// 	toast.success("Document Moved to Recycle Bin")
+					// }
 				>
-					Recycle
+					Delete
 				</motion.button>
 			</div>
 		</motion.div>
