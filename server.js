@@ -7,11 +7,8 @@ import File from "./models/files.js";
 
 import {Storage} from '@google-cloud/storage';
 import multer from 'multer';
-// const multer = require('multer');
 
 const app = express();
-
-// const storage = new Storage();
 
 // connect to mongodb.
 const dbURI =
@@ -36,7 +33,6 @@ app.use(express.json());
 app.use(cors());
 app.get("/", (req, resp) => {
     console.log("GET request received at /");
-    // console.log(req.body);
     resp.send("App is Working");
     
 });
@@ -68,7 +64,6 @@ const register = app.post("/register", async (req, resp) => {
           console.log(result);
       } else {
           console.log("User already registered");
-          // resp.status(409).send("User already registered");
       }
 
   } catch (e) {
@@ -137,7 +132,6 @@ const login = app.post("/login", async (req, resp) => {
     }
     catch (e){
       console.log(e)
-      // resp.send("Something Went Wrong");
       resp.status(500).send("Something went wrong during upload");
     }
   })
@@ -156,6 +150,23 @@ const login = app.post("/login", async (req, resp) => {
   });
 
 
+  const deleteFiles = app.post('/delete', async (req, resp) => {
+    const {fileid, filename} = req.body;
+    try {
+      // Retrieve all files for the user
+      const files = await File.deleteOne({ _id: fileid }).exec();
+   
+      await deleteFileFromGCS(filename);
+      resp.json(files);
+    } catch (error) {
+      console.error(error);
+      resp.status(500).json({ message: 'Server error' });
+    }
+  });
+
+
+// CREATE A DIFFERENT BUCKET FOR EACH USER??
+// OR DIFFERENT FOLDERS INSIDE EACH BUCKET??
 const bucketName = 'e-sign-bucket'
 const storage = new Storage();
 const uploadf = multer();
@@ -163,12 +174,14 @@ const uploadf = multer();
 const upload = app.post('/upload', uploadf.single('file'), async (req, res) => {
 
   const uploadedFile = req.file;
+  const username = req.body.username;
 
   console.log(uploadedFile.originalname);
+  console.log(username)
   console.log(uploadedFile.buffer);
 
   try {
-    await storage.bucket(bucketName).file(uploadedFile.originalname).save(uploadedFile.buffer, {
+    await storage.bucket(bucketName).file(`${uploadedFile.originalname}_${username}`).save(uploadedFile.buffer, {
       contentType: uploadedFile.mimetype,
       gzip: true,
       metadata: {
@@ -177,7 +190,7 @@ const upload = app.post('/upload', uploadf.single('file'), async (req, res) => {
     });
     console.log(`${uploadedFile.originalname} uploaded to ${bucketName}`);
 
-    const publicUrl = `https://storage.googleapis.com/${bucketName}/${uploadedFile.originalname}`;
+    const publicUrl = `https://storage.googleapis.com/${bucketName}/${uploadedFile.originalname}_${username}`;
     console.log(publicUrl);
     res.status(200).send(publicUrl);
   }catch (error) {
@@ -186,4 +199,15 @@ const upload = app.post('/upload', uploadf.single('file'), async (req, res) => {
   }
 });
 
-  
+
+
+
+const deleteFileFromGCS = async (filename) => {
+  try {
+    await storage.bucket(bucketName).file(filename).delete();
+    console.log(`File ${filename} deleted from GCS.`);
+  } catch (error) {
+    console.error('Error deleting file from GCS:', error);
+  }
+};
+

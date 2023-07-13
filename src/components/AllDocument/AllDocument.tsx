@@ -1,5 +1,9 @@
 import { Variant, motion } from "framer-motion";
+import { useCallback } from "react";
 import toast from "react-hot-toast";
+import useUser from "../../hooks/useUser";
+import { EventTypes } from "../../common";
+import useCopyToClipBoard from "../../hooks/useCopyToClipBoard";
 
 type AllDocumentProps = {
 	initial?: Variant;
@@ -10,6 +14,22 @@ type AllDocumentProps = {
 
 export const AllDocument: React.FC<AllDocumentProps> = (props) => {
 	const { initial, animate, exit, file } = props;
+
+	const { username } = useUser();
+
+	const { copy } = useCopyToClipBoard();
+
+	const handleDelete = useCallback((fileToDelete: any) => {
+		PubSub.publish(EventTypes.DELETE_FILE, {
+			fileToDelete,
+			username,
+		});
+	}, []);
+
+	const onClick = useCallback(() => {
+		if (copy(file.path)) toast.success("Link copied!");
+		else toast.error("Something went wrong...");
+	}, [copy, file.path]);
 
 	return (
 		<motion.div
@@ -23,14 +43,17 @@ export const AllDocument: React.FC<AllDocumentProps> = (props) => {
 			<p className="">{file && file.filename}</p>
 			<div className="flex space-x-7 text-[#006699]">
 				<motion.button
-				onClick={()=> window.open(file.path)}
+					onClick={() => window.open(file.path)}
 					whileTap={{ scale: 0.9 }}
 				>
 					Open
 				</motion.button>
+				<motion.button whileTap={{ scale: 0.9 }} onClick={onClick}>
+					Share
+				</motion.button>
 				<motion.button
 					whileTap={{ scale: 0.9 }}
-					onClick={() => toast.success("Document Moved to Recycle Bin")}
+					onClick={() => handleDelete(file)}
 				>
 					Delete
 				</motion.button>

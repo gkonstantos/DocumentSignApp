@@ -8,7 +8,7 @@ type UploadResult = {
 }
 
 export const useUploadFile = () => {
-    const [result, setResult] = useState<UploadResult>({
+    const [uploadResult, setUploadResult] = useState<UploadResult>({
         success: null,
         error: null,
     });
@@ -22,16 +22,16 @@ export const useUploadFile = () => {
             publicUrl,
           });
     
-          setResult({ success: true, error: null });
+          setUploadResult({ success: true, error: null });
         } catch (error:any) {
           if (error.response) {
-            setResult({ success: false, error: error.response.data });
+            setUploadResult({ success: false, error: error.response.data });
           } else {
-            setResult({ success: false, error: 'Something went wrong' });
+            setUploadResult({ success: false, error: 'Something went wrong' });
           }
         }
       };
-      return {result, file};
+      return {uploadResult, file};
 }
 
 export default useUploadFile;

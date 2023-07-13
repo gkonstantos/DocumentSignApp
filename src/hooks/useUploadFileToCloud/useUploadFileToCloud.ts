@@ -1,5 +1,4 @@
 import axios from "axios";
-import { response } from "express";
 import { useState } from "react";
 
 type UploadResult = {
