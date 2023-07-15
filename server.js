@@ -181,7 +181,7 @@ const upload = app.post('/upload', uploadf.single('file'), async (req, res) => {
   console.log(uploadedFile.buffer);
 
   try {
-    await storage.bucket(bucketName).file(`${uploadedFile.originalname}_${username}`).save(uploadedFile.buffer, {
+    await storage.bucket(bucketName).file(`${username}_${uploadedFile.originalname}`).save(uploadedFile.buffer, {
       contentType: uploadedFile.mimetype,
       gzip: true,
       metadata: {
@@ -190,7 +190,7 @@ const upload = app.post('/upload', uploadf.single('file'), async (req, res) => {
     });
     console.log(`${uploadedFile.originalname} uploaded to ${bucketName}`);
 
-    const publicUrl = `https://storage.googleapis.com/${bucketName}/${uploadedFile.originalname}_${username}`;
+    const publicUrl = `https://storage.googleapis.com/${bucketName}/${username}_${uploadedFile.originalname}`;
     console.log(publicUrl);
     res.status(200).send(publicUrl);
   }catch (error) {
