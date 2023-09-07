@@ -1,6 +1,7 @@
 import { Variant, motion } from "framer-motion";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 
 type UserNameProps = {
 	initial?: Variant;
@@ -11,14 +12,16 @@ type UserNameProps = {
 export const Username: React.FC<UserNameProps> = (props) => {
 	const { initial, animate, exit } = props;
 
+	const { t } = useTranslation();
+
 	const [password, setPassword] = useState<string>("");
 	const [username, setUsername] = useState<string>("");
 
 	const handleClick = () => {
 		if (password && username) {
-			toast.success("Username Changed");
+			toast.success(t("TOAST.USERNAME_CHANGED"));
 		} else {
-			toast.error("Something went Wrong...");
+			toast.error(t("TOAST.SOMETHING_WENT_WRONG"));
 		}
 	};
 
@@ -32,7 +35,7 @@ export const Username: React.FC<UserNameProps> = (props) => {
 			}}
 		>
 			<input
-				placeholder="New Username*"
+				placeholder={t("PROFILE.NEW_USERNAME")}
 				className="placeholder:text-center placeholder:text-sm placeholder:italic border-2 border-[#006699]"
 				value={username}
 				required
@@ -41,7 +44,7 @@ export const Username: React.FC<UserNameProps> = (props) => {
 			<input
 				type="password"
 				required
-				placeholder="Your Password*"
+				placeholder={t("PROFILE.YOUR_PASSWORD")}
 				className="placeholder:text-center placeholder:text-sm placeholder:italic border-2 border-[#006699]"
 				value={password}
 				onChange={(e) => setPassword(e.target.value)}

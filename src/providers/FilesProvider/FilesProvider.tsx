@@ -7,20 +7,27 @@ import useDeleteFile from "../../hooks/useDeleteFile";
 import toast from "react-hot-toast";
 import useUploadFileToCloud from "../../hooks/useUploadFileToCloud";
 import useUploadFile from "../../hooks/useUploadFile";
+import { useFetchFromGcs } from "../../hooks/useFetchFromGcs";
+import { useTranslation } from "react-i18next";
 
 export const FilesProvider: React.FC<React.PropsWithChildren> = ({
 	children,
 }) => {
 	const { files, data } = useGetFiles();
 	const { username } = useUser();
+	const { t } = useTranslation();
 
 	const [userFiles, setUserFfiles] = useState<Array<any>>([]);
 	const [acceptedFiles, setAcceptedFiles] = useState<any>([]);
 
 	const { fileDelete, result } = useDeleteFile();
+
+	const { fileFetch } = useFetchFromGcs();
+
 	const { res, cloudFile, publicUrl } = useUploadFileToCloud();
 	const { uploadResult, file } = useUploadFile();
 
+	const [signed, setSigned] = useState<boolean>(false);
 
 	// GET FILES
 	useEffect(() => {
@@ -56,10 +63,10 @@ export const FilesProvider: React.FC<React.PropsWithChildren> = ({
 					`${fileToDelete.filename}_${username}`
 				);
 				PubSub.publish(EventTypes.REFRESH);
-				toast.success("File deleted!");
+				toast.success(t("TOAST.FILE_DELETED"));
 			} catch (error) {
 				console.error(error);
-				toast.error("Something went wrong...");
+				toast.error(t("TOAST.SOMETHING_WENT_WRONG"));
 			}
 		};
 
@@ -76,20 +83,44 @@ export const FilesProvider: React.FC<React.PropsWithChildren> = ({
 		};
 	}, []);
 
-	//UPLOAD
+	// FETCH FROM GCS.
+	useEffect(() => {
+		const handleFetchFile = async (file: any, username: string) => {
+			try {
+				await fileFetch(`${username}_${file.filename}`);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+
+		const subscr = PubSub.subscribe(
+			EventTypes.FETCH_FILE,
+			function (msg, data) {
+				const { file, username } = data;
+				handleFetchFile(file, username);
+			}
+		);
+
+		return () => {
+			PubSub.unsubscribe(subscr);
+		};
+	}, []);
+
+	//UPLOAD TO GCS.
 
 	useEffect(() => {
 		const handleUploadFile = async (
-			acceptedFiles: Array<File>,
-			username: string
+			accfile: any,
+			username: string,
+			signed: boolean
 		) => {
 			try {
-				const file = acceptedFiles[0];
+				const file = accfile;
 				setAcceptedFiles(file);
+				setSigned(signed);
 				const formData = new FormData();
 				formData.append("file", file);
 				formData.append("username", username);
-
 				await cloudFile(formData);
 				console.log("File uploaded to cloud successfully");
 			} catch (error) {
@@ -100,8 +131,8 @@ export const FilesProvider: React.FC<React.PropsWithChildren> = ({
 		const uploadFileSubscription = PubSub.subscribe(
 			EventTypes.UPLOAD,
 			function (msg, data) {
-				const { acceptedFiles, username } = data;
-				handleUploadFile(acceptedFiles, username);
+				const { accfile, username, signed } = data;
+				handleUploadFile(accfile, username, signed);
 			}
 		);
 
@@ -116,13 +147,14 @@ export const FilesProvider: React.FC<React.PropsWithChildren> = ({
 			if (publicUrl && acceptedFiles) {
 				try {
 					const { name, type, size } = acceptedFiles;
-					await file(name, type, size, username, publicUrl);
+					await file(name, type, size, username, publicUrl, signed);
 				} catch (error) {
 					console.error(error);
 				}
 				if (uploadResult.error) {
-					toast.error("error during upload...");
-				} else toast.success("File Uploaded!");
+					toast.error(t("TOAST.ERROR_DURING_UPLOAD"));
+				} else if (signed === false)
+					toast.success(t("TOAST.FILE_UPLOADED"));
 			}
 		};
 
@@ -132,9 +164,6 @@ export const FilesProvider: React.FC<React.PropsWithChildren> = ({
 	useEffect(() => {
 		setUserFfiles(data);
 	}, [data]);
-
-	console.log(userFiles);
-	console.log(data);
 
 	return (
 		<FilesContext.Provider

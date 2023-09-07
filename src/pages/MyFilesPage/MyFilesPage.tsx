@@ -1,37 +1,15 @@
 import { motion } from "framer-motion";
-import { AnimatedTypography, SignedFile } from "../../components";
+import { AnimatedTypography } from "../../components";
 import { AllDocument } from "../../components/AllDocument";
 import { useEffect } from "react";
 import { useGetFilesProv } from "../../hooks/useGetFilesProv";
 import { EventTypes } from "../../common";
-
-const MockAllFiles = [
-	{ name: "File Example 1", id: 1 },
-	{ name: "File Example 2", id: 2 },
-	{ name: "File Example 3", id: 3 },
-	{ name: "File Example 4", id: 4 },
-	{ name: "File Example 5", id: 5 },
-	{ name: "File Example 6", id: 6 },
-	{ name: "File Example 7", id: 7 },
-	{ name: "File Example 8", id: 8 },
-];
-
-const MockFiles = [
-	{ name: "File Example 1", id: 1 },
-	{ name: "File Example 2", id: 2 },
-	{ name: "File Example 3", id: 3 },
-	{ name: "File Example 4", id: 4 },
-	{ name: "File Example 5", id: 5 },
-];
-
-const MockRecycledFiles = [
-	{ name: "Recycled File Example 1", id: 1 },
-	{ name: "Recycled File Example 2", id: 2 },
-];
+import { useTranslation } from "react-i18next";
 
 export const MyFilesPage: React.FC = () => {
 	const { files } = useGetFilesProv();
 
+	const { t } = useTranslation();
 	useEffect(() => {
 		PubSub.publish(EventTypes.REFRESH);
 	}, []);
@@ -39,18 +17,18 @@ export const MyFilesPage: React.FC = () => {
 	return (
 		<div className="h-full w-full flex flex-col items-center">
 			<p className="text-[#006699] font-semibold text-4xl py-3 text-center">
-				All your Documents, in one place!
+				{t("MY_DOCUMENTS.TITLE")}
 			</p>
 			<p className="text-[#006699] w-full font-semibold justify-center flex">
-				Here is your Overview...
+				{t("MY_DOCUMENTS.SUBTITLE")}
 			</p>
 			<AnimatedTypography className="text-[#006699] font-semibold text-3xl pt-10 pb-3">
-				All Documents
+				{t("MY_DOCUMENTS.ALL_DOCUMENTS")}
 			</AnimatedTypography>
 			{files.length > 0 ? (
 				<>
 					<p className="text-[#006699] w-full font-semibold justify-center flex pb-2">
-						Click Open to View and Sign Documents.
+						{t("MY_DOCUMENTS.ALL_DOCUMENTS_SUBTITLE")}
 					</p>
 					<motion.div
 						className="space-y-3 w-1/2 flex flex-col items-center "
@@ -64,33 +42,35 @@ export const MyFilesPage: React.FC = () => {
 							},
 						}}
 					>
-						{files.map((file, index) => (
-							<AllDocument
-								key={index}
-								initial={{
-									y: "200%",
-									opacity: 0,
-								}}
-								animate={{
-									y: 0,
-									opacity: 1,
-								}}
-								file={file}
-							/>
-						))}
+						{files
+							.filter((file) => file.signed === false)
+							.map((file, index) => (
+								<AllDocument
+									key={index}
+									initial={{
+										y: "200%",
+										opacity: 0,
+									}}
+									animate={{
+										y: 0,
+										opacity: 1,
+									}}
+									file={file}
+								/>
+							))}
 					</motion.div>
 				</>
 			) : (
 				<p className="text-[#006699] w-full font-semibold justify-center flex pb-2">
-					No files uploaded yet!
+					{t("MY_DOCUMENTS.NO_FILES_UPLOADED")}
 				</p>
 			)}
 
 			<AnimatedTypography className="text-[#006699] font-semibold text-3xl pt-10 pb-3">
-				Signed Documents
+				{t("MY_DOCUMENTS.SIGNED_DOCUMENTS")}
 			</AnimatedTypography>
 			<AnimatedTypography className="text-[#006699] w-full font-semibold justify-center flex pb-2">
-				Cilck Share to copy share link.
+				{t("MY_DOCUMENTS.SIGNED_DOCUMENTS_SUBTITLE")}
 			</AnimatedTypography>
 			<motion.div
 				className="space-y-3 w-1/2 flex flex-col items-center "
@@ -104,54 +84,23 @@ export const MyFilesPage: React.FC = () => {
 					},
 				}}
 			>
-				{MockFiles.map((file, index) => (
-					<SignedFile
-						key={index}
-						initial={{
-							y: "200%",
-							opacity: 0,
-						}}
-						animate={{
-							y: 0,
-							opacity: 1,
-						}}
-						file={file}
-					/>
-				))}
+				{files
+					.filter((file) => file.signed === true)
+					.map((file, index) => (
+						<AllDocument
+							key={index}
+							initial={{
+								y: "200%",
+								opacity: 0,
+							}}
+							animate={{
+								y: 0,
+								opacity: 1,
+							}}
+							file={file}
+						/>
+					))}
 			</motion.div>
-			{/* <AnimatedTypography className="text-[#006699] font-semibold text-3xl pt-10 pb-3">
-				Recycled Documents
-			</AnimatedTypography>
-			<p className="text-[#006699] w-full font-semibold justify-center flex pb-2">
-				Delete Documents permanently.
-			</p>
-			<motion.div
-				className="space-y-3 w-1/2 flex flex-col items-center pb-20"
-				initial="initial"
-				animate="animate"
-				variants={{
-					animate: {
-						transition: {
-							staggerChildren: 0.2,
-						},
-					},
-				}}
-			>
-				{MockRecycledFiles.map((file, index) => (
-					<RecycledDocument
-						key={index}
-						initial={{
-							y: "200%",
-							opacity: 0,
-						}}
-						animate={{
-							y: 0,
-							opacity: 1,
-						}}
-						file={file}
-					/>
-				))}
-			</motion.div> */}
 		</div>
 	);
 };

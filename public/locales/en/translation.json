@@ -1,0 +1,88 @@
+{
+	"NO_INTERNET": {
+		"MESSAGE": "A connection to the internet <br> is required to use the app"
+	},
+	"SPLASHSCREEN": {
+		"LOADING_MESSAGE": "Loading, please wait…"
+	},
+
+	"GENERAL": {
+		"CONTINUE": "Continue",
+		"BACK": "Back",
+		"OK": "OK",
+		"ACCEPT": "Accept",
+		"SUBMIT": "Submit",
+		"SOMETHING_WENT_WRONG": "Something <br> went wrong",
+		"TRY_AGAIN": "Can you please try again?",
+		"LOADING_MESSAGE": "Loading, please wait…",
+		"YOUR_CREDITS": "Your credits: $balance",
+		"NO_CREDITS": "No Credits",
+		"NO_OPTIONS": "😞 No options found",
+		"VIEW_ALL": "View all",
+		"DATE": "Date",
+		"SCORE": "Score",
+		"STATUS": "Status",
+        "COMMENT": "Comment",
+		"ALLOW": "Allow",
+		"DO_NOT_ALLOW": "Do not allow",
+		"ERROR": "Error",
+		"LOGOUT": "Sign out",
+		"SAVE": "Save",
+		"CANCEL": "Cancel",
+		"UPLOAD": "Upload",
+		"HERE": "here",
+		"NEW": "New",
+		"NOT_NOW": "Not now",
+		"RESET": "Reset"
+	},
+    "MY_DOCUMENTS": {
+        "TITLE": "All your Documents, in one place!",
+        "SUBTITLE": "Here is your Overview...",
+        "ALL_DOCUMENTS": "All Documents",
+        "ALL_DOCUMENTS_SUBTITLE": "Click Open to View and Sign Documents.",
+        "NO_FILES_UPLOADED": "No files uploaded yet!",
+        "SIGNED_DOCUMENTS": "Signed Documents",
+        "SIGNED_DOCUMENTS_SUBTITLE": "Cilck Share to copy share link"
+    },
+    "HOMEPAGE": {
+        "HELLO": "Hello, ",
+        "INFO": "E-sign allows secure digital signing of documents with extreme ease.",
+        "SUB_INFO": "View, sign, download and send documents, now all in one place!",
+        "DOCUMENT_IMAGE_TEXT": "View, open and share your documents, organised like never before.",
+        "VIEW_DOCUMENTS": "View your Documents",
+        "UPLOAD_IMAGE_TEXT": "Upload files for signing easily and with no delays.",
+        "UPLOAD_FILES": "Upload Files",
+        "PROFILE_IMAGE_TEXT": "View and change your personal details.",
+        "PROFILE": "My Profile"
+    },
+	"ALL_DOCUMENT": {
+		"OPEN": "Open",
+		"SIGN": "Sign",
+		"SHARE": "Share",
+		"DELETE": "Delete"
+	},
+	"UPLOAD_PAGE": {
+		"UPLOAD_DOCUMENTS": "Upload Documents",
+		"FILE_UPLOADER_TEXT": "Drag and drop files here or click to select files"
+	},
+	"PROFILE": {
+		"CHANGE_USERNAME": "Change Username",
+		"LOGOUT": "Logout",
+		"NEW_USERNAME": "New Username*",
+		"YOUR_PASSWORD": "Your Password*"
+	},
+	"TOPNAV": {
+		"HOME": "Home",
+		"MY_DOCUMENTS": "My Documents",
+		"UPLOAD": "Upload",
+		"MY_PROFILE": "My Profile"
+	},
+	"TOAST": {
+		"FILE_DELETED": "File deleted!",
+		"SOMETHING_WENT_WRONG": "Something went wrong...",
+		"ERROR_DURING_UPLOAD": "Error during upload...",
+		"FILE_UPLOADED": "File Uploaded!",
+		"USERNAME_CHANGED": "Username Changed"
+	}
+
+}

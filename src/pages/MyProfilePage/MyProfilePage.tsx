@@ -1,21 +1,19 @@
 import { motion } from "framer-motion";
-import { AnimatedTypography } from "../../components";
-import ProfileOption from "./components/ProfileOption";
 import { useState } from "react";
 import Username from "./components/Username";
-import { Password } from "./components/Password";
 import { useNavigate } from "react-router-dom";
 import useUser from "../../hooks/useUser";
+import ProfileOption from "./components/ProfileOption";
+import { useTranslation } from "react-i18next";
 
 export const MyProfilePage: React.FC = () => {
-
 	const { username } = useUser();
 	const navigate = useNavigate();
+	const { t } = useTranslation();
 
 	const [usernameVisible, setUsernameVisible] = useState<boolean>(false);
-	const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
 	const [usernameOpen, setUsernameOpen] = useState<boolean>(false);
-	const [passwordOpen, setPasswordOpen] = useState<boolean>(false);
+
 	return (
 		<div className="h-full w-full flex flex-col  items-center space-y-5">
 			<p className="text-[#006699] font-semibold text-4xl py-3 text-center">
@@ -35,7 +33,7 @@ export const MyProfilePage: React.FC = () => {
 				}}
 			>
 				<ProfileOption
-					text="Change Username"
+					text={t("PROFILE.CHANGE_USERNAME")}
 					icon={
 						new URL(`/assets/profile_edit.svg`, import.meta.url)
 							.href
@@ -69,55 +67,7 @@ export const MyProfilePage: React.FC = () => {
 				)}
 
 				<ProfileOption
-					text="Change Password"
-					icon={
-						new URL(`/assets/profile_consents.svg`, import.meta.url)
-							.href
-					}
-					initial={{
-						y: "200%",
-						opacity: 0,
-					}}
-					animate={{
-						y: 0,
-						opacity: 1,
-						transition: {
-							ease: "easeOut",
-						},
-					}}
-					onClick={() => {
-						setPasswordVisible(!passwordVisible);
-						setPasswordOpen(!passwordOpen);
-					}}
-					open={passwordOpen}
-				/>
-				{passwordVisible && (
-					<Password
-						initial={{
-							opacity: 0,
-						}}
-						animate={{
-							opacity: 1,
-						}}
-					/>
-				)}
-				<ProfileOption
-					text="Change Theme"
-					icon={new URL(`/assets/theme.svg`, import.meta.url).href}
-					initial={{
-						y: "200%",
-						opacity: 0,
-					}}
-					animate={{
-						y: 0,
-						opacity: 1,
-						transition: {
-							ease: "easeOut",
-						},
-					}}
-				/>
-				<ProfileOption
-					text="Logout"
+					text={t("PROFILE.LOGOUT")}
 					icon={
 						new URL(
 							`/assets/logout-svgrepo-com.svg`,
@@ -135,7 +85,10 @@ export const MyProfilePage: React.FC = () => {
 							ease: "easeOut",
 						},
 					}}
-					onClick={() =>{ navigate("/"); localStorage.clear();}}
+					onClick={() => {
+						navigate("/");
+						localStorage.clear();
+					}}
 				/>
 			</motion.div>
 		</div>

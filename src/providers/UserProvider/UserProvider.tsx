@@ -8,9 +8,7 @@ export const UserProvider: React.FC<React.PropsWithChildren> = ({
 }) => {
 	const [userData, setUserData] = useState(() => {
 		const storedUserData = localStorage.getItem("userData");
-		return storedUserData
-			? JSON.parse(storedUserData)
-			: { username: "", password: "" };
+		return storedUserData ? JSON.parse(storedUserData) : { username: "" };
 	});
 
 	useEffect(() => {
@@ -18,8 +16,8 @@ export const UserProvider: React.FC<React.PropsWithChildren> = ({
 	}, [userData]);
 
 	PubSub.subscribe(EventTypes.LOGIN, function (msg, data) {
-		const { username, password } = data;
-		setUserData({ username, password });
+		const { username } = data;
+		setUserData({ username });
 		console.log(userData.username);
 	});
 
@@ -27,7 +25,6 @@ export const UserProvider: React.FC<React.PropsWithChildren> = ({
 		<UserContext.Provider
 			value={{
 				username: userData.username,
-				password: userData.password,
 			}}
 		>
 			{children}

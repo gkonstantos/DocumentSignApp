@@ -12,7 +12,7 @@ export const useUploadFile = () => {
         success: null,
         error: null,
     });
-    const file = async (name: string, type:string,size: number, username:string, publicUrl: string) => {
+    const file = async (name: string, type:string,size: number, username:string, publicUrl: string, signed:boolean) => {
         try {
           await axios.post('http://localhost:5173/uploadFiles', {
             name,
@@ -20,6 +20,7 @@ export const useUploadFile = () => {
             size,
             username,
             publicUrl,
+            signed
           });
     
           setUploadResult({ success: true, error: null });

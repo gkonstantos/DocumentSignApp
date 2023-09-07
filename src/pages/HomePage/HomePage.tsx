@@ -1,18 +1,19 @@
 import { motion } from "framer-motion";
-import { AnimatedTypography } from "../../components/AnimatedTypography";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../hooks/useUser";
+import { useTranslation } from "react-i18next";
 
 export const HomePage: React.FC = () => {
 	const navigate = useNavigate();
 
 	const { username } = useUser();
+	const { t } = useTranslation();
 
 	return (
 		<div className="h-full w-full">
 			<div className="w-full flex flex-col items-center justify-evenly py-5">
 				<p className="text-[#006699] font-semibold text-4xl">
-					Hello, {username}
+					{t("HOMEPAGE.HELLO")} {username}
 				</p>
 				<motion.img
 					initial={{
@@ -35,16 +36,14 @@ export const HomePage: React.FC = () => {
 					}
 				/>
 				<p className="text-[#006699] text-lg font-semibold">
-					E-sign allows secure digital signing of documents with
-					extreme ease. <br />
-					View, sign, download and send documents, now all in one
-					place!
+					{t("HOMEPAGE.INFO")}
+					<br />
+					{t("HOMEPAGE.SUB_INFO")}
 				</p>
 
 				<div className="flex flex-col items-center  space-y-5 ">
 					<p className="text-[#006699]  font-semibold justify-center flex">
-						<br /> View, open and share your documents, organised
-						like never before.
+						<br /> {t("HOMEPAGE.DOCUMENT_IMAGE_TEXT")}
 					</p>
 					<motion.img
 						initial={{
@@ -72,13 +71,13 @@ export const HomePage: React.FC = () => {
 						className="bg-[#006699] w-40 h-14 rounded-3xl text-lg  text-white leading-tight"
 						onClick={() => navigate("/documents")}
 					>
-						View your Documents
+						{t("HOMEPAGE.VIEW_DOCUMENTS")}
 					</motion.button>
 				</div>
 
 				<div className="flex flex-col items-center space-y-5 py-5">
 					<p className="text-[#006699]  font-semibold justify-center flex">
-						Upload files for signing easily and with no delays.
+						{t("HOMEPAGE.UPLOAD_IMAGE_TEXT")}
 					</p>
 					<motion.img
 						initial={{
@@ -106,14 +105,13 @@ export const HomePage: React.FC = () => {
 						className="bg-[#006699] rounded-3xl text-lg w-40 h-14 text-white leading-tight"
 						onClick={() => navigate("/upload")}
 					>
-						Upload Files
+						{t("HOMEPAGE.UPLOAD_FILES")}
 					</motion.button>
 				</div>
 
 				<div className="flex flex-col items-center space-y-5 py-5">
 					<p className="text-[#006699]  font-semibold justify-center flex">
-						View and change your personal details and the app's look
-						and feel.
+						{t("HOMEPAGE.PROFILE_IMAGE_TEXT")}
 					</p>
 					<motion.img
 						initial={{
@@ -141,7 +139,7 @@ export const HomePage: React.FC = () => {
 						className="bg-[#006699] rounded-3xl text-lg w-40 h-14 text-white leading-tight"
 						onClick={() => navigate("/profile")}
 					>
-						My Profile
+						{t("HOMEPAGE.PROFILE")}
 					</motion.button>
 				</div>
 			</div>

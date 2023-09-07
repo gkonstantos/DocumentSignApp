@@ -2,15 +2,13 @@ import React from "react";
 import { motion } from "framer-motion";
 import clsx from "clsx";
 import NavItem from "../NavItem/NavItem";
+import { useTranslation } from "react-i18next";
 
 export const TopNav: React.FunctionComponent = () => {
-
+	const { t } = useTranslation();
 	return (
-		<motion.div 
-			className={clsx(
-				"w-full h-auto fixed top-0",
-				"bg-[#FAFBFF] ",
-			)}
+		<motion.div
+			className={clsx("w-full h-auto fixed top-0", "bg-[#FAFBFF] ")}
 		>
 			<motion.ul
 				className="w-full flex justify-evenly h-20 py-2"
@@ -22,31 +20,10 @@ export const TopNav: React.FunctionComponent = () => {
 					},
 				}}
 			>
-				<NavItem
-					path="home"
-					label="Home"
-					// icon={new URL(`/assets/Icon ionic-md-home.svg`, import.meta.url).href}
-					// iconSelected={new URL(`/assets/Icon ionic-md-homeSelected.svg`, import.meta.url).href}
-				/>
-				<NavItem
-					path="documents"
-					label="My Documents"
-					// icon={new URL(`/assets/Icon feather-target.svg`, import.meta.url).href}
-					// iconSelected={new URL(`/assets/Icon feather-targetSelected.svg`, import.meta.url).href}
-				/>
-				<NavItem
-					path="upload"
-					label="Upload"
-					// icon={new URL(`/assets/Icon feather-award.svg`, import.meta.url).href}
-					// iconSelected={new URL(`/assets/Icon feather-awardSelected.svg`, import.meta.url).href}
-				/>
-				<NavItem
-					path="profile"
-					label="My Profile"
-					// icon={new URL(`/assets/Icon feather-gift.svg`, import.meta.url).href}
-					// iconSelected={new URL(`/assets/Icon feather-giftSelected.svg`, import.meta.url).href}
-				/>
-				
+				<NavItem path="home" label={t("TOPNAV.HOME")} />
+				<NavItem path="documents" label={t("TOPNAV.MY_DOCUMENTS")} />
+				<NavItem path="upload" label={t("TOPNAV.UPLOAD")} />
+				<NavItem path="profile" label={t("TOPNAV.MY_PROFILE")} />
 			</motion.ul>
 		</motion.div>
 	);

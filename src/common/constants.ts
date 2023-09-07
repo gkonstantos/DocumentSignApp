@@ -5,4 +5,6 @@ export const enum EventTypes {
     DELETE_FILE = "DELETE_FILE",
     UPLOAD = "UPLOAD",
     UPLOAD_TO_DB = "UPLOAD_TO_DB",
+    FETCH_FILE = "FETCH_FILE",
+    UPLOAD_SIGNED = "UPLOAD_SIGNED"
 }
