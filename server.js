@@ -104,12 +104,13 @@ const login = app.post("/login", async (req, resp) => {
     }
   });
 
+  // UPLOAD TO MONGODB.
   const uploadFiles = app.post("/uploadFiles", async (req, resp) => {
-    const { name, type, size, username,publicUrl } = req.body;
+    const { name, type, size, username,publicUrl,signed } = req.body;
     try{
       
       const existingFile = await File.findOne({ filename: name, owner: username });
-      if (existingFile) {
+      if (existingFile && existingFile.signed === signed) {
       // File with the same filename and owner already exists, return an error response
         return resp.status(400).json({ error: "File already exists for this user." });
       }
@@ -119,7 +120,8 @@ const login = app.post("/login", async (req, resp) => {
         contentType: type,
         size: size,
         owner: username,
-        path: publicUrl
+        path: publicUrl,
+        signed: signed
       });
       let result = await file.save();
       result = result.toObject();
@@ -136,6 +138,40 @@ const login = app.post("/login", async (req, resp) => {
     }
   })
 
+  // UPLOAD TO GSS.
+  const bucketName = 'e-sign-bucket'
+  const storage = new Storage();
+  const uploadf = multer();
+
+  const upload = app.post('/upload', uploadf.single('file'), async (req, res) => {
+
+    const uploadedFile = req.file;
+    const username = req.body.username;
+
+    console.log(uploadedFile);
+    // console.log(uploadedFile.originalname);
+    // console.log(username)
+    // console.log(uploadedFile.buffer);
+
+    try {
+      await storage.bucket(bucketName).file(`${username}_${uploadedFile.originalname}`).save(uploadedFile.buffer, {
+        contentType: uploadedFile.mimetype,
+        gzip: true,
+        metadata: {
+          cacheControl: 'public, max-age=31536000',
+        },
+      });
+      console.log(`${uploadedFile.originalname} uploaded to ${bucketName}`);
+
+      const publicUrl = `https://storage.googleapis.com/${bucketName}/${username}_${uploadedFile.originalname}`;
+      console.log(publicUrl);
+      res.status(200).send(publicUrl);
+    }catch (error) {
+      console.error('Error uploading file to GCS:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
   const getFiles = app.post('/files', async (req, resp) => {
     const {username} = req.body;
     try {
@@ -149,7 +185,7 @@ const login = app.post("/login", async (req, resp) => {
     }
   });
 
-
+  // DELETE FILES.
   const deleteFiles = app.post('/delete', async (req, resp) => {
     const {fileid, filename} = req.body;
     try {
@@ -165,43 +201,6 @@ const login = app.post("/login", async (req, resp) => {
   });
 
 
-// CREATE A DIFFERENT BUCKET FOR EACH USER??
-// OR DIFFERENT FOLDERS INSIDE EACH BUCKET??
-const bucketName = 'e-sign-bucket'
-const storage = new Storage();
-const uploadf = multer();
-
-const upload = app.post('/upload', uploadf.single('file'), async (req, res) => {
-
-  const uploadedFile = req.file;
-  const username = req.body.username;
-
-  console.log(uploadedFile.originalname);
-  console.log(username)
-  console.log(uploadedFile.buffer);
-
-  try {
-    await storage.bucket(bucketName).file(`${username}_${uploadedFile.originalname}`).save(uploadedFile.buffer, {
-      contentType: uploadedFile.mimetype,
-      gzip: true,
-      metadata: {
-        cacheControl: 'public, max-age=31536000',
-      },
-    });
-    console.log(`${uploadedFile.originalname} uploaded to ${bucketName}`);
-
-    const publicUrl = `https://storage.googleapis.com/${bucketName}/${username}_${uploadedFile.originalname}`;
-    console.log(publicUrl);
-    res.status(200).send(publicUrl);
-  }catch (error) {
-    console.error('Error uploading file to GCS:', error);
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-
-
-
 const deleteFileFromGCS = async (filename) => {
   try {
     await storage.bucket(bucketName).file(filename).delete();
@@ -210,4 +209,114 @@ const deleteFileFromGCS = async (filename) => {
     console.error('Error deleting file from GCS:', error);
   }
 };
+
+//FETCH FILE FROM GCS.
+
+const fetchGcs = app.post('/fetchGcs', async (req, resp) => {
+  const { filename} = req.body;
+  try {
+    // Retrieve all files for the user
+    
+ 
+   const response = await fetchFileFromGCS(filename);
+    // resp.json(files);
+    resp.send(response);
+  } catch (error) {
+    console.error(error);
+    resp.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+const fetchFileFromGCS = async (filename) => {
+  try {
+
+    const file = storage.bucket(bucketName).file(filename);
+
+    const [fileContent] = await file.download();
+
+    // 'fileContent' is a Buffer containing the content of the file
+    return fileContent;
+  } catch (error) {
+    console.error('Error fetching file from GCS:', error);
+    throw error;
+  }
+};
+
+
+
+
+import axios from "axios";
+
+const getData = app.post('/getData', async (req, resp) => {
+  const {payload} = req.body;
+ 
+      const url =
+			"http://localhost:8081/services/rest/signature/one-document/getDataToSign";
+
+
+  try {
+    const response = await axios.post(url, payload, {
+      headers: {
+        Accept: "application/json, application/javascript, text/javascript, text/json",
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+    });
+
+    console.log(response.data); // Handle the response data here
+    resp.send(response.data);
+  } catch (error) {
+    console.error("Error:", error);
+    resp.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+
+const signData = app.post('/signData', async (req, resp) => {
+  const {payload} = req.body;
+ 
+      const url =
+			"http://localhost:8081/services/rest/signature/one-document/signDocument";
+
+  try {
+    const response = await axios.post(url, payload, {
+      headers: {
+        Accept: "application/json, application/javascript, text/javascript, text/json",
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+    });
+
+    console.log(response.data); // Handle the response data here
+    resp.send(response.data);
+  } catch (error) {
+    console.error("Error:", error);
+    resp.status(500).json({ message: 'Server error' });
+  }
+});
+
+
+
+const validateData = app.post('/validateData', async (req, resp) => {
+  const {payload} = req.body;
+ 
+      const url =
+			"http://localhost:8081/services/rest/validation/validateSignature";
+
+  try {
+    const response = await axios.post(url, payload, {
+      headers: {
+        Accept: "application/json, application/javascript, text/javascript, text/json",
+        "Content-Type": "application/json; charset=UTF-8",
+      },
+    });
+
+    console.log(response.data); // Handle the response data here
+    resp.send(response.data);
+  } catch (error) {
+    console.error("Error:", error);
+    resp.status(500).json({ message: 'Server error' });
+  }
+});
+
 
