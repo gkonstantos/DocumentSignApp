@@ -9,7 +9,7 @@ type UploadResult = {
 
 export const useUploadFile = () => {
     const [uploadResult, setUploadResult] = useState<UploadResult>({
-        success: null,
+        success: true,
         error: null,
     });
     const file = async (name: string, type:string,size: number, username:string, publicUrl: string, signed:boolean) => {
