@@ -10,6 +10,7 @@ import { blobToBase64, base64ToFile } from "file64";
 import { useSignData } from "../../hooks/useSignData";
 import { useValidateData } from "../../hooks/useValidateData";
 import { useTranslation } from "react-i18next";
+import useUploadFile from "../../hooks/useUploadFile";
 
 type AllDocumentProps = {
 	initial?: Variant;
@@ -167,6 +168,7 @@ export const AllDocument: React.FC<AllDocumentProps> = (props) => {
 
 					await getData(payload);
 					console.log(data);
+					if (!data) PubSub.publish(EventTypes.ACTION_FINISHED);
 				} catch (error) {
 					console.log(error);
 				}
@@ -296,9 +298,11 @@ export const AllDocument: React.FC<AllDocumentProps> = (props) => {
 	// GET FILE.
 	const handleSignDocument = async () => {
 		try {
+			PubSub.publish(EventTypes.ACTION_LOADING);
 			await fileFetch(`${username}_${file.filename}`);
 			if (gcsFile) {
 				toast.error("File already signed!");
+				PubSub.publish(EventTypes.ACTION_FINISHED);
 			}
 		} catch (error) {
 			console.log(error);

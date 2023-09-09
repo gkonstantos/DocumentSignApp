@@ -151,10 +151,17 @@ export const FilesProvider: React.FC<React.PropsWithChildren> = ({
 				} catch (error) {
 					console.error(error);
 				}
+				if (uploadResult.success === true) {
+					toast.success(t("File signed!"));
+					console.log("success");
+				}
 				if (uploadResult.error) {
 					toast.error(t("TOAST.ERROR_DURING_UPLOAD"));
-				} else if (signed === false)
+				} else if (signed === false) {
 					toast.success(t("TOAST.FILE_UPLOADED"));
+				}
+
+				PubSub.publish(EventTypes.ACTION_FINISHED);
 			}
 		};
 

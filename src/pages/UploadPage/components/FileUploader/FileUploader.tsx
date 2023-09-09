@@ -10,10 +10,11 @@ export const FileUploader: React.FC = () => {
 	const { t } = useTranslation();
 
 	const onDrop = useCallback((acceptedFiles: any) => {
+		PubSub.publish(EventTypes.ACTION_LOADING);
 		PubSub.publish(EventTypes.UPLOAD, {
 			accfile: acceptedFiles[0],
 			username,
-			signed: false
+			signed: false,
 		});
 	}, []);
 
@@ -31,7 +32,7 @@ export const FileUploader: React.FC = () => {
 		>
 			<input {...getInputProps()} />
 			<p className="text-[#006699] font-semibold text-3xl flex-wrap px-3">
-			{t("UPLOAD_PAGE.FILE_UPLOADER_TEXT")}
+				{t("UPLOAD_PAGE.FILE_UPLOADER_TEXT")}
 			</p>
 		</div>
 	);
