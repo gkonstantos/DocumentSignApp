@@ -17,7 +17,6 @@
     "copy-to-clipboard": "^3.3.3",
     "cors": "^2.8.5",
     "express": "^4.18.2",
-    "file64": "^1.0.2",
     "framer-motion": "^10.12.3",
     "i18next": "^23.4.4",
     "i18next-http-backend": "^2.2.1",
@@ -35,7 +34,8 @@
     "react-icons": "^4.10.1",
     "react-router-dom": "^6.10.0",
     "vite-plugin-svgr": "^3.2.0",
-    "vite-tsconfig-paths": "^4.2.0"
+    "vite-tsconfig-paths": "^4.2.0",
+    "webcrypto-core": "^1.7.7"
   },
   "devDependencies": {
     "@types/cors": "^2.8.13",

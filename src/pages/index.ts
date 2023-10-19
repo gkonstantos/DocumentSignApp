@@ -3,4 +3,5 @@ export * from "./HomePage";
 export * from "./LoginPage";
 export * from "./MyFilesPage";
 export * from "./MyProfilePage";
+export * from "./RegisterPage";
 export * from "./UploadPage";

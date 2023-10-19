@@ -14,10 +14,10 @@ export const useSignData = () => {
     });
     const [signedData, setSignedData] = useState<any>();
 
-    const signData = async (payload: any) => {
+    const signData = async (base64Signature:string, username:string, filename:string) => {
         try {
           const response = await axios.post('http://localhost:5173/signData', {
-            payload,
+            base64Signature, username, filename
           });
     
           setResult({ success: true, error: null });

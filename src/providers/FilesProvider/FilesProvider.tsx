@@ -29,6 +29,8 @@ export const FilesProvider: React.FC<React.PropsWithChildren> = ({
 
 	const [signed, setSigned] = useState<boolean>(false);
 
+	const [filenamee, setFilename] = useState<string>("");
+
 	// GET FILES
 	useEffect(() => {
 		const fetchData = async () => {
@@ -107,17 +109,18 @@ export const FilesProvider: React.FC<React.PropsWithChildren> = ({
 	}, []);
 
 	//UPLOAD TO GCS.
-
 	useEffect(() => {
 		const handleUploadFile = async (
 			accfile: any,
 			username: string,
-			signed: boolean
+			signed: boolean,
+			filename: string
 		) => {
 			try {
 				const file = accfile;
 				setAcceptedFiles(file);
 				setSigned(signed);
+				setFilename(filename);
 				const formData = new FormData();
 				formData.append("file", file);
 				formData.append("username", username);
@@ -131,8 +134,8 @@ export const FilesProvider: React.FC<React.PropsWithChildren> = ({
 		const uploadFileSubscription = PubSub.subscribe(
 			EventTypes.UPLOAD,
 			function (msg, data) {
-				const { accfile, username, signed } = data;
-				handleUploadFile(accfile, username, signed);
+				const { accfile, username, signed, filename } = data;
+				handleUploadFile(accfile, username, signed, filename);
 			}
 		);
 
@@ -147,13 +150,29 @@ export const FilesProvider: React.FC<React.PropsWithChildren> = ({
 			if (publicUrl && acceptedFiles) {
 				try {
 					const { name, type, size } = acceptedFiles;
-					await file(name, type, size, username, publicUrl, signed);
+					name
+						? await file(
+								name,
+								type,
+								size,
+								username,
+								publicUrl,
+								signed
+						  )
+						: await file(
+								filenamee,
+								type,
+								size,
+								username,
+								publicUrl,
+								signed
+						  );
 				} catch (error) {
 					console.error(error);
 				}
 				if (uploadResult.success === true) {
-					toast.success(t("File signed!"));
-					console.log("success");
+					// toast.success(t("File signed!"));
+					PubSub.publish(EventTypes.REFRESH);
 				}
 				if (uploadResult.error) {
 					toast.error(t("TOAST.ERROR_DURING_UPLOAD"));

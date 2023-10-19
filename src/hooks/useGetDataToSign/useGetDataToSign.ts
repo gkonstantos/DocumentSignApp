@@ -14,10 +14,10 @@ export const useGetDataToSign = () => {
     });
     const [data, setData] = useState<any>();
 
-    const getData = async (payload: any) => {
+    const getData = async (username:string, filename: string) => {
         try {
           const response = await axios.post('http://localhost:5173/getData', {
-            payload,
+            username, filename
           });
     
           setResult({ success: true, error: null });
