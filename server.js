@@ -10,6 +10,7 @@ import multer from 'multer';
 
 const app = express();
 
+
 // connect to mongodb.
 const dbURI =
 	"mongodb+srv://testuser:test123@esign.eprlzdc.mongodb.net/esign?retryWrites=true&w=majority";
@@ -31,6 +32,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.json());
 app.use(cors());
+
 app.get("/", (req, resp) => {
     console.log("GET request received at /");
     resp.send("App is Working");
@@ -147,11 +149,7 @@ const login = app.post("/login", async (req, resp) => {
 
     const uploadedFile = req.file;
     const username = req.body.username;
-
     console.log(uploadedFile);
-    // console.log(uploadedFile.originalname);
-    // console.log(username)
-    // console.log(uploadedFile.buffer);
 
     try {
       await storage.bucket(bucketName).file(`${username}_${uploadedFile.originalname}`).save(uploadedFile.buffer, {
@@ -215,11 +213,9 @@ const deleteFileFromGCS = async (filename) => {
 const fetchGcs = app.post('/fetchGcs', async (req, resp) => {
   const { filename} = req.body;
   try {
+
     // Retrieve all files for the user
-    
- 
    const response = await fetchFileFromGCS(filename);
-    // resp.json(files);
     resp.send(response);
   } catch (error) {
     console.error(error);
@@ -243,14 +239,85 @@ const fetchFileFromGCS = async (filename) => {
   }
 };
 
-
-
-
 import axios from "axios";
 
 const getData = app.post('/getData', async (req, resp) => {
-  const {payload} = req.body;
- 
+  const {username,filename} = req.body;
+
+  const file = `${username}_${filename}`
+  const respo = await fetchFileFromGCS(file);
+  const b64 = respo.toString('base64');
+  console.log(b64);
+  
+  const payload = {
+    parameters: {
+      signingCertificate: {
+        encodedCertificate:
+          "MIIC6jCCAdKgAwIBAgIGLtYU17tXMA0GCSqGSIb3DQEBCwUAMDAxGzAZBgNVBAMMElJvb3RTZWxmU2lnbmVkRmFrZTERMA8GA1UECgwIRFNTLXRlc3QwHhcNMTcwNjA4MTEyNjAxWhcNNDcwNzA0MDc1NzI0WjAoMRMwEQYDVQQDDApTaWduZXJGYWtlMREwDwYDVQQKDAhEU1MtdGVzdDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMI3kZhtnipn+iiZHZ9ax8FlfE5Ow/cFwBTfAEb3R1ZQUp6/BQnBt7Oo0JWBtc9qkv7JUDdcBJXPV5QWS5AyMPHpqQ75Hitjsq/Fzu8eHtkKpFizcxGa9BZdkQjh4rSrtO1Kjs0Rd5DQtWSgkeVCCN09kN0ZsZ0ENY+Ip8QxSmyztsStkYXdULqpwz4JEXW9vz64eTbde4vQJ6pjHGarJf1gQNEc2XzhmI/prXLysWNqC7lZg7PUZUTrdegABTUzYCRJ1kWBRPm4qo0LN405c94QQd45a5kTgowHzEgLnAQI28x0M3A59TKC+ieNc6VF1PsTLpUw7PNI2VstX5jAuasCAwEAAaMSMBAwDgYDVR0PAQH/BAQDAgEGMA0GCSqGSIb3DQEBCwUAA4IBAQCK6LGA01TR+rmU8p6yhAi4OkDN2b1dbIL8l8iCMYopLCxx8xqq3ubZCOxqh1X2j6pgWzarb0b/MUix00IoUvNbFOxAW7PBZIKDLnm6LsckRxs1U32sC9d1LOHe3WKBNB6GZALT1ewjh7hSbWjftlmcovq+6eVGA5cvf2u/2+TkKkyHV/NR394nXrdsdpvygwypEtXjetzD7UT93Nuw3xcV8VIftIvHf9LjU7h+UjGmKXG9c15eYr3SzUmv6kyOI0Bvw14PWtsWGl0QdOSRvIBBrP4adCnGTgjgjk9LTcO8B8FKrr+8lHGuc0bp4lIUToiUkGILXsiEeEg9WAqm+XqO",
+      },
+      certificateChain: [],
+      detachedContents: null,
+      asicContainerType: null,
+      signatureLevel: "XAdES_BASELINE_B",
+      signaturePackaging: "ENVELOPING",
+      embedXML: false,
+      manifestSignature: false,
+      jwsSerializationType: null,
+      sigDMechanism: null,
+      signatureAlgorithm: "RSA_SHA256",
+      digestAlgorithm: "SHA256",
+      encryptionAlgorithm: "RSA",
+      referenceDigestAlgorithm: null,
+      maskGenerationFunction: null,
+      contentTimestamps: null,
+      contentTimestampParameters: {
+        digestAlgorithm: "SHA256",
+        canonicalizationMethod:
+          "http://www.w3.org/2001/10/xml-exc-c14n#",
+        timestampContainerForm: null,
+      },
+      signatureTimestampParameters: {
+        digestAlgorithm: "SHA256",
+        canonicalizationMethod:
+          "http://www.w3.org/2001/10/xml-exc-c14n#",
+        timestampContainerForm: null,
+      },
+      archiveTimestampParameters: {
+        digestAlgorithm: "SHA256",
+        canonicalizationMethod:
+          "http://www.w3.org/2001/10/xml-exc-c14n#",
+        timestampContainerForm: null,
+      },
+      signWithExpiredCertificate: false,
+      generateTBSWithoutCertificate: false,
+      imageParameters: null,
+      signatureIdToCounterSign: null,
+      blevelParams: {
+        trustAnchorBPPolicy: true,
+        signingDate: 1675669784752,
+        claimedSignerRoles: null,
+        policyId: null,
+        policyQualifier: null,
+        policyDescription: null,
+        policyDigestAlgorithm: null,
+        policyDigestValue: null,
+        policySpuri: null,
+        commitmentTypeIndications: null,
+        signerLocationPostalAddress: [],
+        signerLocationPostalCode: null,
+        signerLocationLocality: null,
+        signerLocationStateOrProvince: null,
+        signerLocationCountry: null,
+        signerLocationStreet: null,
+      },
+    },
+    toSignDocument: {
+      bytes: b64,
+      digestAlgorithm: null,
+      name: filename,
+    },
+  };
+
       const url =
 			"http://localhost:8081/services/rest/signature/one-document/getDataToSign";
 
@@ -261,6 +328,7 @@ const getData = app.post('/getData', async (req, resp) => {
         Accept: "application/json, application/javascript, text/javascript, text/json",
         "Content-Type": "application/json; charset=UTF-8",
       },
+      
     });
 
     console.log(response.data); // Handle the response data here
@@ -271,16 +339,91 @@ const getData = app.post('/getData', async (req, resp) => {
   }
 });
 
-
-
 const signData = app.post('/signData', async (req, resp) => {
-  const {payload} = req.body;
+  const {base64Signature,username,filename} = req.body;
+
+  const file = `${username}_${filename}`
+  const respo = await fetchFileFromGCS(file);
+  const b64 = respo.toString('base64');
+
+  const payloadToSign = {
+    parameters: {
+      signingCertificate: {
+        encodedCertificate:
+          "MIIC6jCCAdKgAwIBAgIGLtYU17tXMA0GCSqGSIb3DQEBCwUAMDAxGzAZBgNVBAMMElJvb3RTZWxmU2lnbmVkRmFrZTERMA8GA1UECgwIRFNTLXRlc3QwHhcNMTcwNjA4MTEyNjAxWhcNNDcwNzA0MDc1NzI0WjAoMRMwEQYDVQQDDApTaWduZXJGYWtlMREwDwYDVQQKDAhEU1MtdGVzdDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAMI3kZhtnipn+iiZHZ9ax8FlfE5Ow/cFwBTfAEb3R1ZQUp6/BQnBt7Oo0JWBtc9qkv7JUDdcBJXPV5QWS5AyMPHpqQ75Hitjsq/Fzu8eHtkKpFizcxGa9BZdkQjh4rSrtO1Kjs0Rd5DQtWSgkeVCCN09kN0ZsZ0ENY+Ip8QxSmyztsStkYXdULqpwz4JEXW9vz64eTbde4vQJ6pjHGarJf1gQNEc2XzhmI/prXLysWNqC7lZg7PUZUTrdegABTUzYCRJ1kWBRPm4qo0LN405c94QQd45a5kTgowHzEgLnAQI28x0M3A59TKC+ieNc6VF1PsTLpUw7PNI2VstX5jAuasCAwEAAaMSMBAwDgYDVR0PAQH/BAQDAgEGMA0GCSqGSIb3DQEBCwUAA4IBAQCK6LGA01TR+rmU8p6yhAi4OkDN2b1dbIL8l8iCMYopLCxx8xqq3ubZCOxqh1X2j6pgWzarb0b/MUix00IoUvNbFOxAW7PBZIKDLnm6LsckRxs1U32sC9d1LOHe3WKBNB6GZALT1ewjh7hSbWjftlmcovq+6eVGA5cvf2u/2+TkKkyHV/NR394nXrdsdpvygwypEtXjetzD7UT93Nuw3xcV8VIftIvHf9LjU7h+UjGmKXG9c15eYr3SzUmv6kyOI0Bvw14PWtsWGl0QdOSRvIBBrP4adCnGTgjgjk9LTcO8B8FKrr+8lHGuc0bp4lIUToiUkGILXsiEeEg9WAqm+XqO",
+      },
+      certificateChain: [],
+      detachedContents: null,
+      asicContainerType: null,
+      signatureLevel: "XAdES_BASELINE_B",
+      signaturePackaging: "ENVELOPING",
+      embedXML: false,
+      manifestSignature: false,
+      jwsSerializationType: null,
+      sigDMechanism: null,
+      signatureAlgorithm: "RSA_SHA256",
+      digestAlgorithm: "SHA256",
+      encryptionAlgorithm: "RSA",
+      referenceDigestAlgorithm: null,
+      maskGenerationFunction: null,
+      contentTimestamps: null,
+      contentTimestampParameters: {
+        digestAlgorithm: "SHA256",
+        canonicalizationMethod:
+          "http://www.w3.org/2001/10/xml-exc-c14n#",
+        timestampContainerForm: null,
+      },
+      signatureTimestampParameters: {
+        digestAlgorithm: "SHA256",
+        canonicalizationMethod:
+          "http://www.w3.org/2001/10/xml-exc-c14n#",
+        timestampContainerForm: null,
+      },
+      archiveTimestampParameters: {
+        digestAlgorithm: "SHA256",
+        canonicalizationMethod:
+          "http://www.w3.org/2001/10/xml-exc-c14n#",
+        timestampContainerForm: null,
+      },
+      signWithExpiredCertificate: false,
+      generateTBSWithoutCertificate: false,
+      imageParameters: null,
+      signatureIdToCounterSign: null,
+      blevelParams: {
+        trustAnchorBPPolicy: true,
+        signingDate: 1675669784752,
+        claimedSignerRoles: null,
+        policyId: null,
+        policyQualifier: null,
+        policyDescription: null,
+        policyDigestAlgorithm: null,
+        policyDigestValue: null,
+        policySpuri: null,
+        commitmentTypeIndications: null,
+        signerLocationPostalAddress: [],
+        signerLocationPostalCode: null,
+        signerLocationLocality: null,
+        signerLocationStateOrProvince: null,
+        signerLocationCountry: null,
+        signerLocationStreet: null,
+      },
+    },
+    signatureValue: {
+      algorithm: "RSA_SHA256",
+      value: base64Signature,
+    },
+    toSignDocument: {
+      bytes: b64,
+      digestAlgorithm: null,
+      name: filename,
+    },
+  };
  
       const url =
 			"http://localhost:8081/services/rest/signature/one-document/signDocument";
 
   try {
-    const response = await axios.post(url, payload, {
+    const response = await axios.post(url, payloadToSign, {
       headers: {
         Accept: "application/json, application/javascript, text/javascript, text/json",
         "Content-Type": "application/json; charset=UTF-8",
@@ -294,7 +437,6 @@ const signData = app.post('/signData', async (req, resp) => {
     resp.status(500).json({ message: 'Server error' });
   }
 });
-
 
 
 const validateData = app.post('/validateData', async (req, resp) => {

@@ -1,39 +1,10 @@
 {
-	"NO_INTERNET": {
-		"MESSAGE": "A connection to the internet <br> is required to use the app"
-	},
-	"SPLASHSCREEN": {
-		"LOADING_MESSAGE": "Loading, please wait…"
-	},
-
+	
 	"GENERAL": {
 		"CONTINUE": "Continue",
 		"BACK": "Back",
 		"OK": "OK",
-		"ACCEPT": "Accept",
-		"SUBMIT": "Submit",
-		"SOMETHING_WENT_WRONG": "Something <br> went wrong",
-		"TRY_AGAIN": "Can you please try again?",
-		"LOADING_MESSAGE": "Loading, please wait…",
-		"YOUR_CREDITS": "Your credits: $balance",
-		"NO_CREDITS": "No Credits",
-		"NO_OPTIONS": "😞 No options found",
-		"VIEW_ALL": "View all",
-		"DATE": "Date",
-		"SCORE": "Score",
-		"STATUS": "Status",
-        "COMMENT": "Comment",
-		"ALLOW": "Allow",
-		"DO_NOT_ALLOW": "Do not allow",
-		"ERROR": "Error",
-		"LOGOUT": "Sign out",
-		"SAVE": "Save",
-		"CANCEL": "Cancel",
-		"UPLOAD": "Upload",
-		"HERE": "here",
-		"NEW": "New",
-		"NOT_NOW": "Not now",
-		"RESET": "Reset"
+		"SOMETHING_WENT_WRONG": "Something <br> went wrong"
 	},
     "MY_DOCUMENTS": {
         "TITLE": "All your Documents, in one place!",
