@@ -312,7 +312,7 @@ const getData = app.post('/getData', async (req, resp) => {
       },
     },
     toSignDocument: {
-      bytes: b64,
+      bytes: b64, // FILE TO BE SIGNED IN B64 FORMAT.
       digestAlgorithm: null,
       name: filename,
     },
