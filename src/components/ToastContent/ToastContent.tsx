@@ -1,4 +1,3 @@
-
 import { Toaster } from "react-hot-toast";
 
 export const ToastContent: React.FunctionComponent = () => {
@@ -9,19 +8,21 @@ export const ToastContent: React.FunctionComponent = () => {
 			toastOptions={{
 				success: {
 					duration: 1000,
-					className: "bg-emerald-500 text-white text-lg font-medium rounded-3xl shadow-2xl",
+					className:
+						"bg-emerald-500 text-white text-lg font-medium rounded-3xl shadow-2xl",
 				},
 				loading: {
-					className: "bg-gray-500 text-white text-lg font-medium rounded-3xl shadow-2xl",
+					className:
+						"bg-gray-500 text-white text-lg font-medium rounded-3xl shadow-2xl",
 				},
 				error: {
 					duration: 1000,
-					className: "bg-red-500 text-white text-lg font-medium rounded-3xl shadow-2xl",
+					className:
+						"bg-red-500 text-white text-lg font-medium rounded-3xl shadow-2xl",
 				},
 			}}
 		/>
 	);
 };
-
 
 export default ToastContent;

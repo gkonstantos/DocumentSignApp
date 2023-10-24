@@ -7,8 +7,8 @@ import useCopyToClipBoard from "../../hooks/useCopyToClipBoard";
 import { useGetDataToSign } from "../../hooks/useGetDataToSign";
 import { useFetchFromGcs } from "../../hooks/useFetchFromGcs";
 import { useSignData } from "../../hooks/useSignData";
-import { useValidateData } from "../../hooks/useValidateData";
 import { useTranslation } from "react-i18next";
+import axios from "axios";
 
 type AllDocumentProps = {
 	initial?: Variant;
@@ -25,9 +25,9 @@ export const AllDocument: React.FC<AllDocumentProps> = (props) => {
 	const { copy } = useCopyToClipBoard();
 	const { getData, data } = useGetDataToSign();
 	const { signData, signedData } = useSignData();
-	const { validateData, validatedData } = useValidateData();
 	const { fileFetch, gcsFile } = useFetchFromGcs();
 
+	const [privateKey, setPrivateKey] = useState("");
 	const [finalsignature, setFinalSignature] = useState<ArrayBuffer>();
 
 	const handleDelete = useCallback((fileToDelete: any) => {
@@ -47,63 +47,53 @@ export const AllDocument: React.FC<AllDocumentProps> = (props) => {
 		if (signedData) {
 			const decode = async () => {
 				try {
-					console.log(signedData.bytes);
 					const base64String = signedData.bytes;
 					const binaryString = atob(base64String);
 
 					//PDF
-					// const blob = new Blob(
-					// 	[
-					// 		new Uint8Array(binaryString.length).map((_, i) =>
-					// 			binaryString.charCodeAt(i)
-					// 		),
-					// 	],
-					// 	{ type: "application/pdf" }
-					// );
-					// // console.log(blob)
-					// // console.log(binaryString)
+					const blob = new Blob(
+						[
+							new Uint8Array(binaryString.length).map((_, i) =>
+								binaryString.charCodeAt(i)
+							),
+						],
+						{ type: "application/pdf" }
+					);
 
-					// // Create a URL for the Blob
+					// Create a URL for the Blob
+					const url = URL.createObjectURL(blob);
+					// Create a downloadable link
+					const a = document.createElement("a");
+					a.href = url;
+					a.download = signedData.name;
+					a.click();
+					URL.revokeObjectURL(url);
+
+					//XML. NEED TO CHANGE signatureLevel TO XAdES_BASELINE_B TO WORK.
+					// const text = new TextDecoder().decode(
+					// 	new Uint8Array(binaryString.length).map((_, i) =>
+					// 		binaryString.charCodeAt(i)
+					// 	)
+					// );
+					// const parser = new DOMParser();
+					// const xmlDoc = parser.parseFromString(
+					// 	text,
+					// 	"application/xml"
+					// );
+					// console.log(xmlDoc);
+					// const xmlString = new XMLSerializer().serializeToString(
+					// 	xmlDoc
+					// );
+					// const blob = new Blob([xmlString], {
+					// 	type: "application/xml",
+					// });
 					// const url = URL.createObjectURL(blob);
-					// // Create a downloadable link
 					// const a = document.createElement("a");
 					// a.href = url;
 					// a.download = signedData.name;
 					// a.click();
-
-					// console.log(a);
 					// URL.revokeObjectURL(url);
 
-					// // console.log(decfile)
-
-					//XML
-					const text = new TextDecoder().decode(
-						new Uint8Array(binaryString.length).map((_, i) =>
-							binaryString.charCodeAt(i)
-						)
-					);
-					const parser = new DOMParser();
-					const xmlDoc = parser.parseFromString(
-						text,
-						"application/xml"
-					);
-					console.log(xmlDoc);
-
-					const xmlString = new XMLSerializer().serializeToString(
-						xmlDoc
-					);
-					const blob = new Blob([xmlString], {
-						type: "application/xml",
-					});
-					const url = URL.createObjectURL(blob);
-					const a = document.createElement("a");
-					a.href = url;
-					a.download = signedData.name;
-
-					a.click();
-					URL.revokeObjectURL(url);
-
-					// THERE IS A BUG. SECOND UPLOAD IN AROW DOES NOT WORK.
 					PubSub.publish(EventTypes.UPLOAD, {
 						accfile: blob as File,
 						username,
@@ -124,7 +114,6 @@ export const AllDocument: React.FC<AllDocumentProps> = (props) => {
 			const getDato = async () => {
 				try {
 					await getData(username, file.filename);
-					console.log(data);
 					if (!data) PubSub.publish(EventTypes.ACTION_FINISHED);
 				} catch (error) {
 					console.log(error);
@@ -134,53 +123,68 @@ export const AllDocument: React.FC<AllDocumentProps> = (props) => {
 		}
 	}, [gcsFile]);
 
-	// STEP 2 SIGNA DATA WITH GENERATED PRIVATE KEY.
+	// GET PK.
 	useEffect(() => {
-		if (data) {
+		// Make an HTTP request to the server endpoint
+		const getpk = async () => {
+			try {
+				if (data) {
+					const resp = await axios.get(
+						"http://localhost:5173/privatekey"
+					);
+					setPrivateKey(resp.data);
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		};
+		getpk();
+	}, [data]);
+
+	// STEP 2 SIGN DATA WITH GENERATED PRIVATE KEY.
+	useEffect(() => {
+		if (data && privateKey) {
 			const getPrivateKey = async () => {
 				try {
-					console.log(data);
+					const str2ab = (str: any) => {
+						const buf = new ArrayBuffer(str.length);
+						const bufView = new Uint8Array(buf);
+						for (let i = 0, strLen = str.length; i < strLen; i++) {
+							bufView[i] = str.charCodeAt(i);
+						}
+						return buf;
+					};
+
+					const binaryDerString = window.atob(privateKey);
+					const binaryDer = str2ab(binaryDerString);
+
 					const encoder = new TextEncoder();
 					const dataBytes = encoder.encode(data.bytes);
+					// import pem key in order to get correct format for sign.
 					window.crypto.subtle
-						.generateKey(
+						.importKey(
+							"pkcs8",
+							binaryDer,
 							{
 								name: "RSASSA-PKCS1-v1_5",
-								modulusLength: 2048,
-								publicExponent: new Uint8Array([
-									0x01, 0x00, 0x01,
-								]),
 								hash: { name: "SHA-256" },
 							},
-							false,
-							["sign", "verify"]
+							true,
+							["sign"]
 						)
-						.then(function (key) {
-							//returns a keypair object
-							console.log(key);
+						.then(function (importedKey) {
+							//returns private key.
 							window.crypto.subtle
 								.sign(
 									{
 										name: "RSASSA-PKCS1-v1_5",
 									},
-									key.privateKey,
+									importedKey,
 									dataBytes
 								)
 								.then(function (signature) {
 									//returns an ArrayBuffer containing the signature
 									setFinalSignature(signature);
-									window.crypto.subtle
-										.verify(
-											{
-												name: "RSASSA-PKCS1-v1_5",
-											},
-											key.publicKey,
-											signature,
-											dataBytes
-										)
-										.catch(function (err) {
-											console.error(err);
-										});
 									return signature;
 								})
 								.catch(function (err) {
@@ -197,7 +201,7 @@ export const AllDocument: React.FC<AllDocumentProps> = (props) => {
 			};
 			getPrivateKey();
 		}
-	}, [data]);
+	}, [privateKey]);
 
 	// STEP 3 SIGN DOCUMENT.
 	useEffect(() => {
@@ -217,6 +221,7 @@ export const AllDocument: React.FC<AllDocumentProps> = (props) => {
 				};
 				const base64Signature = arrayBufferToBase64(signatureArray);
 				try {
+					// add he signature to the file to get the signed doc.
 					await signData(base64Signature, username, file.filename);
 				} catch (error) {
 					console.log(error);
@@ -225,38 +230,6 @@ export const AllDocument: React.FC<AllDocumentProps> = (props) => {
 			signDato();
 		}
 	}, [finalsignature]);
-
-	// Validate Document.
-	// useEffect(() => {
-	// 	if (signedData) {
-	// 		const validateDato = async () => {
-	// 			try {
-	// 				const payloadToValidate = {
-	// 					signedDocument: {
-	// 						bytes: signedData.bytes, // SIGNED DOC
-	// 						digestAlgorithm: null,
-	// 						name: `signed-${file.filename}`, // SIGNED DOC NAME
-	// 					},
-	// 					originalDocuments: [
-	// 						{
-	// 							bytes: b64file, // ORIGINAL DOC in base 64
-	// 							digestAlgorithm: null,
-	// 							name: file.filename, // ORIGINAL DOC NAME
-	// 						},
-	// 					],
-	// 					policy: null,
-	// 					tokenExtractionStrategy: "NONE",
-	// 					signatureId: null,
-	// 				};
-	// 				await validateData(payloadToValidate);
-	// 				console.log(validatedData);
-	// 			} catch (error) {
-	// 				console.log(error);
-	// 			}
-	// 		};
-	// 		validateDato();
-	// 	}
-	// }, [signedData]);
 
 	// GET FILE.
 	const handleSignDocument = async () => {
