@@ -173,7 +173,7 @@ export const AllDocument: React.FC<AllDocumentProps> = (props) => {
 							["sign"]
 						)
 						.then(function (importedKey) {
-							//returns private key.
+							//returns signature value.
 							window.crypto.subtle
 								.sign(
 									{
