@@ -19,7 +19,7 @@ export const Username: React.FC<UserNameProps> = (props) => {
 
 	const handleClick = () => {
 		if (password && username) {
-			toast.success(t("TOAST.USERNAME_CHANGED"));
+			toast.success(t("FUNCTIONALITY COMING SOON..."));
 		} else {
 			toast.error(t("TOAST.SOMETHING_WENT_WRONG"));
 		}

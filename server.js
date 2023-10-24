@@ -198,7 +198,7 @@ const login = app.post("/login", async (req, resp) => {
     }
   });
 
-
+//DELETE FILE FROM GCS.
 const deleteFileFromGCS = async (filename) => {
   try {
     await storage.bucket(bucketName).file(filename).delete();
@@ -253,12 +253,12 @@ const getData = app.post('/getData', async (req, resp) => {
     parameters: {
       signingCertificate: {
         encodedCertificate:
-          "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",
+          "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",
       },
       certificateChain: [],
       detachedContents: null,
       asicContainerType: null,
-      signatureLevel: "XAdES_BASELINE_B",
+      signatureLevel: "PAdES_BASELINE_B",
       signaturePackaging: "ENVELOPING",
       embedXML: false,
       manifestSignature: false,
@@ -294,7 +294,7 @@ const getData = app.post('/getData', async (req, resp) => {
       signatureIdToCounterSign: null,
       blevelParams: {
         trustAnchorBPPolicy: true,
-        signingDate: 1675669784752,
+        signingDate: 1698143767463,
         claimedSignerRoles: null,
         policyId: null,
         policyQualifier: null,
@@ -350,12 +350,12 @@ const signData = app.post('/signData', async (req, resp) => {
     parameters: {
       signingCertificate: {
         encodedCertificate:
-          "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",
+          "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",
       },
       certificateChain: [],
       detachedContents: null,
       asicContainerType: null,
-      signatureLevel: "XAdES_BASELINE_B",
+      signatureLevel: "PAdES_BASELINE_B",
       signaturePackaging: "ENVELOPING",
       embedXML: false,
       manifestSignature: false,
@@ -391,7 +391,7 @@ const signData = app.post('/signData', async (req, resp) => {
       signatureIdToCounterSign: null,
       blevelParams: {
         trustAnchorBPPolicy: true,
-        signingDate: 1675669784752,
+        signingDate: 1698143767463,
         claimedSignerRoles: null,
         policyId: null,
         policyQualifier: null,
@@ -438,27 +438,14 @@ const signData = app.post('/signData', async (req, resp) => {
   }
 });
 
+import fs from "fs";
 
-const validateData = app.post('/validateData', async (req, resp) => {
-  const {payload} = req.body;
- 
-      const url =
-			"http://localhost:8081/services/rest/validation/validateSignature";
-
+const getprivatekey = app.get('/privatekey', async (req, resp) => {
   try {
-    const response = await axios.post(url, payload, {
-      headers: {
-        Accept: "application/json, application/javascript, text/javascript, text/json",
-        "Content-Type": "application/json; charset=UTF-8",
-      },
-    });
-
-    console.log(response.data); // Handle the response data here
-    resp.send(response.data);
+    const privateKey = fs.readFileSync("key.pem", "utf8").replace("-----BEGIN PRIVATE KEY-----", "").replace("-----END PRIVATE KEY-----", "").trim();
+    resp.send(privateKey);
   } catch (error) {
-    console.error("Error:", error);
-    resp.status(500).json({ message: 'Server error' });
+    console.error("Error reading private key:", error);
+    resp.status(500).send("Internal Server Error");
   }
 });
-
-

@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import clsx from "clsx";
 import { useNavigate } from "react-router-dom";
 import { useLogin } from "../../hooks/useLogin";
-import { UserContext } from "../../context/UserContext";
 import PubSub from "pubsub-js";
 import { EventTypes } from "../../common";
 
@@ -26,14 +25,14 @@ export const LoginPage: React.FunctionComponent = () => {
 	useEffect(() => {
 		if (result.success) {
 			PubSub.publish(EventTypes.LOGIN, {
-				username, password
+				username,
+				password,
 			});
 			setUserName("");
 			setPassword("");
-			// login(username, password);
 			navigate("/home");
 		}
-	}, [result.success, navigate]);	
+	}, [result.success, navigate]);
 
 	return (
 		<motion.div
